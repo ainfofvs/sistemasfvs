@@ -1,0 +1,1 @@
+web: gunicorn sistemasfvs.wsgi --log-file -
