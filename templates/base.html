@@ -1,0 +1,276 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Sistemas FVS</title>
+    <!-- Favicon-->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+    {% block css %}
+    {% endblock %}
+
+</head>
+
+<body class="theme-teal">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Carregando...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <div class="search-icon">
+            <i class="material-icons">search</i>
+        </div>
+        <input type="text" placeholder="Procurar...">
+        <div class="close-search">
+            <i class="material-icons">close</i>
+        </div>
+    </div>
+    <!-- #END# Search Bar -->
+    <!-- Top Bar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="javascript:void(0);" class="bars"></a>
+                <a class="navbar-brand" href="{% url 'home' %}">{% block title %}{% endblock %}</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <!-- Call Search -->
+
+
+                {% block return %}{% endblock %}
+                {% block search %}{% endblock %}
+                <!-- #END# Call Search -->
+                <!-- Notifications -->
+                {% block notifications %}{% endblock %}
+                <!-- #END# Notifications -->
+                <!-- Tasks -->
+                {% block tasks %}{% endblock %}
+                <!-- #END# Tasks -->
+                {% block options %}{% endblock %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- #Top Bar -->
+    <section>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            <div class="user-info">
+                <div class="image">
+                    <img src="{% static 'images/user.png' %}" width="48" height="48" alt="User" />
+                </div>
+                <div class="info-container">
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.username }}</div>
+                    <div class="email">{{ user.email }}</div>
+                    <div class="btn-group user-helper-dropdown">
+                        <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="{% url 'perfil' %}"><i class="material-icons">person</i>Perfil</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{% url 'logout' %}"><i class="material-icons">input</i>Sair</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- #User Info -->
+            <!-- Menu -->
+            <div class="menu">
+                <ul class="list">
+                    <li class="header">MENU</li>
+                    <li class="active">
+                        <a href="{% url 'home' %}">
+                            <i class="material-icons">home</i>
+                            <span>Página Principal</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">devices</i>
+                            <span>SisPRO</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{% url 'sistema_list' %}">
+                                    <span>Projetos</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'status_list' %}">
+                                    <span>Status</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'fase_list' %}">
+                                    <span>Fases</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">remove_red_eye</i>
+                            <span>SIVISAM</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    <span>Configuração</span>
+                                </a>
+                                <ul class="ml-menu">
+                                    <li>
+                                        <a href="{% url 'pais_list' %}">País</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'estado_list' %}">Estado</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'municipio_list' %}">Município</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'bairro_list' %}">Bairro</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'natureza_list' %}">Natureza</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'escolaridade_list' %}">Escolaridade</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'formacao_list' %}">Formação</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'area_list' %}">Área</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'atividade_list' %}">Atividade</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'conselho_list' %}">Conselho</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'subatividade_list' %}">Subatividade</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'entidade_list' %}">Entidade</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'areaproducao_list' %}">Área de Produção</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'classeproducao_list' %}">Classe de Produção</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'linhaproducao_list' %}">Linha de Produção</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'formaproducao_list' %}">Forma de Produção</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" class="menu-toggle">
+                                    <span>Administração</span>
+                                </a>
+                                <ul class="ml-menu">
+                                    <li>
+                                        <a href="{% url 'cnpj' %}">Estabelecimento</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'cpf_liberal' %}">Profissional Liberal</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'cpf_autonomo' %}">Profissional Autônomo</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- #Menu -->
+            <!-- Footer -->
+            <div class="legal">
+                <div class="copyright">
+                     2019 &copy; <a href="http://www.fvs.am.gov.br">Fundação de Vigilância em Saúde</a>
+                </div>
+                <div class="version">
+                    <b>Versão: </b> 1.0
+                </div>
+            </div>
+            <!-- #Footer -->
+        </aside>
+
+        <!-- #END# Left Sidebar -->
+        <!-- Right Sidebar -->
+        {% block rightside %}{% endblock %}
+        <!-- #END# Right Sidebar -->
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                <h2>{% block page_title %}{% endblock %}</h2>
+            </div>
+            {% if messages %}
+                {% for message in messages %}
+                   {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                        <div class="alert alert-success alert-dismissible">
+                   {% endif %}
+                   {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                        <div class="alert alert-info alert-dismissible">
+                   {% endif %}
+                   {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+                        <div class="alert alert-warning alert-dismissible">
+                   {% endif %}
+                   {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                        <div class="alert alert-danger alert-dismissible">
+                   {% endif %}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <i class="material-icons">close</i>
+                            </button>
+                           {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}Sucesso: {% endif %}
+                           {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}Importante: {% endif %}
+                           {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}Atenção: {% endif %}
+                           {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Erro: {% endif %}
+                           {{ message }}
+                        </div>
+                {% endfor %}
+           {% endif %}
+           {% block content %}
+           {% endblock %}
+        </div>
+    </section>
+
+    {% block js %}
+
+    {% endblock %}
+</body>
+
+</html>

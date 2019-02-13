@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+    <!-- Bootstrap Core Css -->
+    <link href="{% static 'plugins/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="{% static 'plugins/node-waves/waves.css' %}" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="{% static 'plugins/animate-css/animate.css' %}" rel="stylesheet" />
+
+    <!-- JQuery DataTable Css -->
+    <link href="{% static 'plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css' %}" rel="stylesheet">
+
+    <!-- Custom Css -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="{% static 'css/themes/all-themes.css' %}" rel="stylesheet" />
+{% endblock %}
+{% block title %} SIVISAM - Estabelecimento {% endblock %}
+{% block return %}
+       <li class="pull-right"><a href="{% url 'devisa' %}"><i class="material-icons">chevron_left</i></a></li>
+{% endblock %}
+
+{% block content %}
+
+<div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>
+                                ESTABELECIMENTO
+                                <small>Lista de Estabelecimentos Comerciais</small>
+                            </h2>
+                            <ul class="header-dropdown m-r--5">
+                                <li class="dropdown">
+                                    <a href="{% url 'cnpj_validacao' %}">
+                                        <button type="button" class="btn bg-teal btn-block btn-lg waves-effect">
+                                            Cadastrar Estabelecimento
+                                        </button>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover dataTable js-exportable">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>CNPJ</th>
+                                            <th>Razão Social</th>
+                                            <th>Nome Fantasia</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for entidade in entidades %}
+                                        <tr>
+                                            <td>{{ entidade.id }}</td>
+                                            <td>{{ entidade.ent_cnpj }}</td>
+                                            <td>{{ entidade.ent_nome_razao }}</td>
+                                            <td>{{ entidade.ent_fantasia }}</td>
+                                            <td>
+                                                <a href="javascript:void(0);" data-trigger="focus" data-container="body" data-toggle="popover"
+                                                        data-placement="left" data-html="true" data-content='
+
+                                                    <a href="{% url 'entresp_list' entidade.id %}" rel="tooltip" title="Responsável Legal" class="btn"><i class="material-icons">perm_identity</i></a>
+                                                    <a href="{% url 'entsub_list' entidade.id %}" rel="tooltip" title="Atividades" class="btn"><i class="material-icons">business_center</i></a>
+                                                    <a href="{% url 'entresptec_list' entidade.id %}" rel="tooltip" title="Responsável Técnico" class="btn"><i class="material-icons">assignment_ind</i></a>
+                                                    <a href="{% url 'terceirizada_list' entidade.id %}" rel="tooltip" title="Terceirizações" class="btn"><i class="material-icons">transfer_within_a_station</i></a>
+                                                    <a href="{% url 'ent_linha_producao_list' entidade.id %}" rel="tooltip" title="Linha de Produção" class="btn"><i class="material-icons">content_paste</i></a>
+                                                    <a href="{% url 'unid_list' entidade.id %}" rel="tooltip" title="Unidades" class="btn"><i class="material-icons">store_mall_directory</i></a>
+                                                    <a href="{% url 'cnpj_view' entidade.id %}" rel="tooltip" title="Ver" class="btn"><i class="material-icons">search</i></a>
+                                                    <a href="{% url 'cnpj_update' entidade.id %}" rel="tooltip" title="Editar" class="btn"><i class="material-icons">mode_edit</i></a>
+                                                    <a href="{% url 'cnpj_delete' entidade.id %}" rel="tooltip" title="Excluir" class="btn"><i class="material-icons">close</i></a>
+
+
+
+                                                    '>
+                                                    <i class="material-icons">more_vert</i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+</div>
+<!--<div>
+    <a href="{% url 'cnpj_validacao' %}">
+        <button type="button" class="btn bg-teal btn-circle-lg waves-effect waves-circle waves-float right">
+            <i class="material-icons">add</i>
+        </button>
+    </a>
+</div>-->
+{% endblock %}
+{% block js %}
+    <!-- Jquery Core Js -->
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.js' %}"></script>
+
+    <!-- Select Plugin Js -->
+    <script src="{% static 'plugins/bootstrap-select/js/bootstrap-select.js' %}"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="{% static 'plugins/jquery-slimscroll/jquery.slimscroll.js' %}"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="{% static 'plugins/node-waves/waves.js' %}"></script>
+
+    <!-- Jquery DataTable Plugin Js -->
+    <script src="{% static 'plugins/jquery-datatable/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}"></script>
+    <script src="{% static 'plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'plugins/jquery-datatable/extensions/export/buttons.flash.min.js' %}"></script>
+    <script src="{% static 'plugins/jquery-datatable/extensions/export/jszip.min.js' %}"></script>
+    <script src="{% static 'plugins/jquery-datatable/extensions/export/pdfmake.min.js' %}"></script>
+    <script src="{% static 'plugins/jquery-datatable/extensions/export/vfs_fonts.js' %}"></script>
+    <script src="{% static 'plugins/jquery-datatable/extensions/export/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'plugins/jquery-datatable/extensions/export/buttons.print.min.js' %}"></script>
+
+    <!-- Custom Js -->
+    <script src="{% static 'js/admin.js' %}"></script>
+    <script src="{% static 'js/pages/tables/jquery-datatable.js' %}"></script>
+    <script src="{% static 'js/pages/ui/tooltips-popovers.js' %}"></script>
+
+
+    <!-- Demo Js -->
+    <script src="{% static 'js/demo.js' %}"></script>
+{% endblock %}

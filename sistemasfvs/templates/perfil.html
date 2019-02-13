@@ -1,0 +1,235 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+    <!-- Bootstrap Core Css -->
+    <link href="{% static 'plugins/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="{% static 'plugins/node-waves/waves.css' %}" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="{% static 'plugins/animate-css/animate.css' %}" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="{% static 'css/themes/all-themes.css' %}" rel="stylesheet" />
+{% endblock %}
+{% block title %} Sistemas FVS - Perfil {% endblock %}
+{% block content %}
+
+
+
+            <div class="row clearfix">
+                <div class="col-xs-12 col-sm-3">
+                    <div class="card profile-card">
+                        <div class="profile-header">&nbsp;</div>
+                        <div class="profile-body">
+                            <div class="image-area">
+                                <img src="{% static 'images/user.png' %}" alt="Imagem de Perfil" />
+                            </div>
+                            <div class="content-area">
+                                <h3>{{ user.username }}</h3>
+                                <p>{{ user.email }}</p>
+                            </div>
+                        </div>
+                        <div class="profile-footer">
+                            <div id="altera_foto" style="display:none;">
+                                <form action="{% url 'altera_foto' %}" method="post">
+                                    {% csrf_token %}
+                                        <div class="form-group">
+                                            <label for="foto" class="col-sm-2 control-label">Foto</label>
+                                            <div class="col-sm-10">
+                                                <div class="form-line">
+                                                     <input type="file" class="form-control" id="id_foto" name="foto" placeholder="Escolha uma foto...">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br/><br/>
+                                        <div class="form-group">
+                                             <div class="col-sm-offset-2 col-sm-10">
+                                                  <button type="submit" class="btn btn-lg bg-teal btn-block">SALVAR</button>
+                                                  <button type="button" onclick="js: $('#altera_foto').hide(); $('#btn_altera_foto').show(); " class="btn btn-lg bg-teal btn-block">CANCELAR</button>
+                                             </div>
+                                        </div>
+
+                                </form>
+                            </div>
+                            <button id="btn_altera_foto" onclick="js: $('#altera_foto').show(); $('#btn_altera_foto').hide(); " class="btn bg-teal btn-lg waves-effect btn-block">ALTERAR FOTO</button>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="col-xs-12 col-sm-9">
+                    <div class="card">
+                        <div class="body">
+                            <div>
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Permissões/Grupos</a></li>
+                                    <li role="presentation"><a href="#profile_settings" aria-controls="settings" role="tab" data-toggle="tab">Alterar Informações</a></li>
+                                    <li role="presentation" class="active"><a href="#change_password_settings" aria-controls="settings" role="tab" data-toggle="tab">Alterar Senha</a></li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in" id="home">
+                                        <br/>
+                                        <div class="col-xs-12">
+                                            <div class="col-xs-6 col-sm-6">
+                                                PERMISSÕES:
+                                                <br/><br/>
+                                                <ul>
+                                                {% for perm in perms %}
+                                                    <li><b>{{ perm.codename }}</b> - {{ perm.name }}</li><br/>
+                                                {% endfor %}
+                                                </ul>
+                                            </div>
+                                            <div class="col-xs-6 col-sm-6">
+                                                GRUPOS:
+                                                <br/><br/>
+                                                <ul>
+                                                {% for group in groups %}
+                                                    <li><b>{{ group.name }}</b></li><br/>
+                                                {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+
+                                    <div role="tabpanel" class="tab-pane fade in" id="profile_settings">
+                                        <form class="form-horizontal">
+                                            <div class="form-group">
+                                                <label for="username" class="col-sm-2 control-label">Login</label>
+                                                <div class="col-sm-10">
+                                                    <div class="form-line">
+                                                        <input type="text" class="form-control" id="id_username" name="username" value="{{ user.username }}" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <form method="post">
+                                            {% csrf_token %}
+                                                <div class="form-group">
+                                                    <label for="email" class="col-sm-2 control-label">Email</label>
+                                                    <div class="col-sm-10">
+                                                        <div class="form-line">
+                                                            <input type="email" class="form-control" id="id_email" name="email" placeholder="Email" value="{{ user.email }}" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="first_name" class="col-sm-2 control-label">Nome</label>
+                                                    <div class="col-sm-10">
+                                                        <div class="form-line">
+                                                            <input type="text" class="form-control" id="id_first_name" name="first_name" placeholder="Nome" value="{{ user.first_name }}" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="last_name" class="col-sm-2 control-label">Sobrenome</label>
+                                                    <div class="col-sm-10">
+                                                        <div class="form-line">
+                                                            <input type="text" class="form-control" id="id_last_nome" name="last_name" placeholder="Sobrenome" value="{{ user.last_name }}" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-sm-offset-2 col-sm-10">
+                                                        <input type="checkbox" id="terms_condition_check" class="chk-col-red filled-in" checked disabled/>
+                                                        <label for="terms_condition_check">Declaro que as informações acima são verdadeiras</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-sm-offset-2 col-sm-10">
+                                                        <button type="submit" class="btn btn-lg bg-teal">SALVAR</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </form>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade in active" id="change_password_settings">
+                                        <form method="post" class="form-horizontal">
+                                        {% csrf_token %}
+                                            <div class="form-group">
+                                                <label for="old_password" class="col-sm-3 control-label">Senha Antiga</label>
+                                                <div class="col-sm-9">
+                                                    <div class="form-line">
+                                                        <input type="password" class="form-control" id="id_old_password" name="old_password" placeholder="Senha Antiga" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="new_password1" class="col-sm-3 control-label">Nova Senha</label>
+                                                <div class="col-sm-9">
+                                                    <div class="form-line">
+                                                        <input type="password" class="form-control" id="id_new_password1" name="new_password1" placeholder="Nova Senha" required>
+                                                    </div>
+                                                    <small style="color: #aaa;">
+                                                        Sua senha não pode ser tão parecida com suas outras informações pessoais.<br/>
+                                                        Sua senha precisa conter pelo menos 8 caracteres.<br/>
+                                                        Sua senha não pode ser uma senha habitualmente utilizada.<br/>
+                                                        Sua senha não pode ser inteiramente numérica.
+                                                    </small>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="new_password2" class="col-sm-3 control-label">Nova Senha (Confirmação)</label>
+                                                <div class="col-sm-9">
+                                                    <div class="form-line">
+                                                        <input type="password" class="form-control" id="id_new_password2" name="new_password2" placeholder="Nova Senha (Confirmação)" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <ul class="errorlist" style="color: red;">
+                                                {{ form.old_password.errors }}
+                                                {{ form.new_password1.errors }}
+                                                {{ form.new_password2.errors }}<br/>
+                                            </ul>
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-3 col-sm-9">
+                                                    <button type="submit" class="btn btn-lg bg-teal">SALVAR</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+{% endblock %}
+
+{% block js %}
+    <!-- Jquery Core Js -->
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.js' %}"></script>
+
+    <!-- Select Plugin Js -->
+    <script src="{% static 'plugins/bootstrap-select/js/bootstrap-select.js' %}"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="{% static 'plugins/jquery-slimscroll/jquery.slimscroll.js' %}"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="{% static 'plugins/node-waves/waves.js' %}"></script>
+
+    <!-- Custom Js -->
+    <script src="{% static 'js/admin.js' %}"></script>
+    <script src="{% static 'js/pages/examples/profile.js' %}"></script>
+
+    <!-- Demo Js -->
+    <script src="{% static 'js/demo.js' %}"></script>
+{% endblock %}
