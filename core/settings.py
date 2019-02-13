@@ -25,7 +25,7 @@ SECRET_KEY = 'tk_cz!@6fp@p1)xc#r_w93h_=9!fa3gh44ez03!n5oei97_ctn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.77', 'localhost', '0.0.0.0']
+ALLOWED_HOSTS = ['192.168.1.77', 'localhost', '0.0.0.0', 'rsolart.pythonanywhere.com']
 
 
 # Application definition
