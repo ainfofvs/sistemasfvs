@@ -24,14 +24,17 @@
 
 
 {% block content %}
-<div class="col-md-2">
-    <center>
-        <a href="{% url 'sistema_list' %}" class="btn-link">
-            <img src="{% static 'images/nds-icon.png' %}"><br/>
-            <b>SisPRO</b>
-        </a>
-    </center>
-</div>
+
+{% if perms.sistemasfvs.sistema_list %}
+    <div class="col-md-2">
+        <center>
+            <a href="{% url 'sistema_list' %}" class="btn-link">
+                <img src="{% static 'images/nds-icon.png' %}"><br/>
+                <b>SisPRO</b>
+            </a>
+        </center>
+    </div>
+{% endif %}
 
 <div class="col-md-2">
     <center>

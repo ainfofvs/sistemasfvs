@@ -64,6 +64,7 @@ def validate_CPF(value):
     #return orig_value
     return flag
 
+
 def validate_CNPJ(value):
     """
     Value can be either a string in the format XX.XXX.XXX/XXXX-XX or a

@@ -57,6 +57,8 @@ class Sistema(models.Model):
             ('sistema_delete', 'Pode deletar projeto'),
             ('sistema_doctos', 'Pode ver documentos do projeto'),
             ('sistema_fases', 'Pode ver fases do projeto'),
+            ('perfil', 'Pode acessar o perfil do usuario')
+
         )
 
     def __str__(self):

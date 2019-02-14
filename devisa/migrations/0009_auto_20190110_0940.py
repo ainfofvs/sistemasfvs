@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='entidade',
             name='municipio',
-            field=models.ForeignKey(blank=True, default='Selecione um Município', on_delete=django.db.models.deletion.CASCADE, to='devisa.Municipio'),
+            field=models.ForeignKey(blank=True, on_delete=django.db.models.deletion.CASCADE, to='devisa.Municipio'),
         ),
     ]
