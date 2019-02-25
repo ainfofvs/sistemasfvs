@@ -46,10 +46,11 @@ class BairroForm(ModelForm):
 class NaturezaForm(ModelForm):
     class Meta:
         model = Natureza
-        fields = ['nat_nome', 'nat_descricao']
+        fields = ['nat_nome', 'nat_descricao', 'nat_categoria']
         widgets = {
             'nat_nome': TextInput(attrs={'class': 'form-control'}),
-            'nat_descricao': TextInput(attrs={'class': 'form-control'})
+            'nat_descricao': TextInput(attrs={'class': 'form-control'}),
+            'nat_categoria': Select(attrs={'class': 'form-control'})
         }
 
 

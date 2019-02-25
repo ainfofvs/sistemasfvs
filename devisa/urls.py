@@ -28,7 +28,7 @@ from .views import classeproducao_list, classeproducao_create, classeproducao_up
 from .views import linhaproducao_list, linhaproducao_create, linhaproducao_update, linhaproducao_view, linhaproducao_delete
 from .views import formaproducao_list, formaproducao_create, formaproducao_update, formaproducao_view, formaproducao_delete
 from .views import ent_linha_producao_list, ent_forma_producao_create, ent_classe_producao_create
-from .views import ent_forma_producao_delete, ent_classe_producao_delete
+from .views import ent_forma_producao_delete, ent_classe_producao_delete, cnpj2
 
 
 
@@ -127,6 +127,7 @@ urlpatterns = [
     path('cpf_autonomo_update/<int:id>', cpf_autonomo_update, name="cpf_autonomo_update"),
     path('cpf_autonomo_delete/<int:id>', cpf_autonomo_delete, name="cpf_autonomo_delete"),
 
+    path('cnpj2', cnpj2, name="cnpj2"),
     path('cnpj', cnpj, name="cnpj"),
     path('cnpj_view/<int:id>', cnpj_view, name="cnpj_view"),
     path('cnpj_create/<str:cnpj>', cnpj_create, name="cnpj_create"),

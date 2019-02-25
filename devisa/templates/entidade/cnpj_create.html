@@ -13,7 +13,6 @@
     <!-- Colorpicker Css -->
     <link href="{% static 'plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.css' %}" rel="stylesheet" />
 
-
     <!-- Multi Select Css -->
     <link href="{% static 'plugins/multi-select/css/multi-select.css' %}" rel="stylesheet">
 
@@ -28,6 +27,9 @@
 
     <!-- noUISlider Css -->
     <link href="{% static 'plugins/nouislider/nouislider.min.css' %}" rel="stylesheet" />
+
+    <!-- Sweetalert Css -->
+    <link href="{% static 'plugins/sweetalert/sweetalert.css' %}" rel="stylesheet" />
 
     <!-- Custom Css -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
@@ -130,6 +132,9 @@
                                             <label class="form-label" style="font-weight: normal; font-size: 12px; color: #aaa;">Bairro*</label>
                                             <div class="form-line">
                                                 {{ form.bairro }}
+                                            </div>
+                                            <div class="js-sweetalert">
+                                                <button class="btn btn-lg btn-teal bg-cyan waves-effect" data-type="basic" style="width: 120px;">Novo Bairro</button>
                                             </div>
                                         </div>
 
@@ -270,6 +275,9 @@
     <!-- Waves Effect Plugin Js -->
     <script src="{% static 'plugins/node-waves/waves.js' %}"></script>
 
+    <!-- SweetAlert Plugin Js -->
+    <script src="{% static 'plugins/sweetalert/sweetalert.min.js' %}"></script>
+
     <!-- Custom Js -->
     <script src="{% static 'js/admin.js' %}"></script>
     <script>
@@ -280,9 +288,17 @@
             $demoMaskedInput.find('.data').inputmask('dd/mm/yyyy', { placeholder: '__/__/____' });
             $demoMaskedInput.find('.fone').inputmask('(99) 99999-9999', { placeholder: '(__) _____-____' });
             $demoMaskedInput.find('.cep').inputmask('99.999-999', { placeholder: '__.___-___' });
+
+             $('.js-sweetalert button').on('click', function () {
+                var type = $(this).data('type');
+                if (type === 'basic') {
+                    showBasicMessage();
+                }
+            });
         });
     </script>
 
     <!-- Demo Js -->
     <script src="{% static 'js/demo.js' %}"></script>
+    <script src="{% static 'js/pages/ui/dialogs.js' %}"></script>
 {% endblock %}

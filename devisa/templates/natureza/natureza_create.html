@@ -38,6 +38,9 @@
     <link href="{% static 'css/themes/all-themes.css' %}" rel="stylesheet" />
 {% endblock %}
 {% block title %} SIVISAM - Natureza Jurídica / Dependência Administrativa {% endblock %}
+{% block return %}
+       <li class="pull-right"><a href="{% url 'natureza_list' %}"><i class="material-icons">chevron_left</i></a></li>
+{% endblock %}
 
 {% block content %}
 
@@ -51,12 +54,7 @@
                             </h2>
                             <ul class="header-dropdown m-r--5">
                                 <li class="dropdown">
-                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                        <i class="material-icons">more_vert</i>
-                                    </a>
-                                    <ul class="dropdown-menu pull-right">
-                                        <li><a href="{% url 'natureza_list' %}">Voltar</a></li>
-                                    </ul>
+
                                 </li>
                             </ul>
                         </div>
@@ -74,6 +72,13 @@
                                     <div class="form-line">
                                         {{ form.nat_descricao }}
                                         <label class="form-label">Descrição</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-float">
+                                    <label class="form-label" style="font-weight: normal; font-size: 12px; color: #aaa;">Categoria</label>
+                                    <div class="form-line">
+                                        {{ form.nat_categoria }}
                                     </div>
                                 </div>
 

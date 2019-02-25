@@ -8,10 +8,17 @@ from .forms import AtividadeForm, SubatividadeForm, EscolaridadeForm, FormacaoFo
 from .forms import AreaproducaoForm, ClasseproducaoForm, LinhaproducaoForm, FormaproducaoForm
 from django.contrib import messages
 import re
+import xmltodict
+import json
 from django.core.validators import EMPTY_VALUES
-from django.forms import ValidationError
 from django.utils.translation import ugettext_lazy as _
+
+# Cliente WS
 from django import template
+from requests import Session
+from zeep import Client
+from zeep.transports import Transport
+
 
 register = template.Library()
 
@@ -37,7 +44,7 @@ def validate_CPF(value):
     flag = 1
 
     if value in EMPTY_VALUES:
-        return u''
+        return ''
     if not value.isdigit():
         value = re.sub("[-\.]", "", value)
     orig_value = value[:]
@@ -74,7 +81,7 @@ def validate_CNPJ(value):
     flg = 1
     value = str(value)
     if value in EMPTY_VALUES:
-        return u''
+        return ''
     if not value.isdigit():
         value = re.sub("[-/\.]", "", value)
     orig_value = value[:]
@@ -83,7 +90,7 @@ def validate_CNPJ(value):
     except ValueError:
         #raise ValidationError(error_messages['digits_only'])
         flg = -1
-    if len(value) > 14:
+    if len(value) < 14:
         #raise ValidationError(error_messages['max_digits'])
         flg = -2
     orig_dv = value[-2:]
@@ -305,11 +312,65 @@ def cnpj_validacao(request):
 @permission_required('devisa.cnpj')
 def cnpj(request):
     model = Entidade.objects.filter(ent_tipo_entidade=1)
-    # q = request.GET.get('pesquisar_por')
-    # if q is not None:
-    #     model = model.filter(Q(ent_cnpj__icontains=q) | Q(ent_nome_razao__icontains=q))
+
+    # Consumo do WebService - RedeSIM
+    # session = Session()
+    # session.verify = False
+    # transport = Transport(session=session)
+    # client013 = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE013?wsdl', transport=transport)
+    # resultado013 = client013.service.recuperaEstabelecimentos(wsE013Request={
+    #                                                         'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+    #                                                         'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+    #                                                         'maximoRegistros': 1
+    #                                                     })
+    #
+    # client031 = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+    # resultado031 = client031.service.wsE031(wsE031Request={
+    #                                                         'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+    #                                                         'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+    #                                                         'cnpj': '28685818000104'
+    #                                                     })
 
     return render(request, 'entidade/cnpj.html', {'entidades': model})
+
+
+@login_required
+@permission_required('devisa.cnpj')
+def cnpj2(request):
+    form = EntidadeForm(request.POST or None, request.FILES or None)
+    est = ''
+    valida = ''
+    cnpj = ''
+    nome = ''
+    fantasia = ''
+    matriz_filial = ''
+    statusConexao = ''
+
+    if request.POST:
+        ent_cnpj = request.POST['ent_cnpj']
+        session = Session()
+        session.verify = False
+        transport = Transport(session=session)
+        client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+        estabelecimento = client.service.wsE031(wsE031Request={
+                                                                'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+                                                                'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+                                                                'cnpj': ent_cnpj
+                                                            })
+        cnpj = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.cnpj
+        nome = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeEmpresarial
+        fantasia = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeFantasia
+        matriz_filial = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.identificadorMatrizFilial
+        statusConexao = 'Acesso via Web Service'
+        if matriz_filial=='M':
+            matriz_filial = 'Matriz'
+        else:
+            matriz_filial = 'Filial'
+
+        valida = 'none'
+
+    return render(request, 'entidade/cnpj2.html', {'form': form, 'cnpj': cnpj, 'nome': nome, 'fantasia': fantasia, 'matriz_filial': matriz_filial, 'valida': valida, 'statusConexao': statusConexao})
+
 
 
 @login_required

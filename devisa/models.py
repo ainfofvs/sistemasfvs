@@ -70,8 +70,26 @@ class Bairro(models.Model):
 
 
 class Natureza(models.Model):
+    ESTABELECIMENTO = '1'
+    UNIDADE = '2'
+    TERCEIRIZADA = '3'
+    PROFLIBERAL = '4'
+    PROFAUTONOMO = '5'
+    RESPLEGAL = '6'
+    RESPTEC = '7'
+    OPCOES = (
+        (ESTABELECIMENTO, 'Estabelecimento Comercial'),
+        (UNIDADE, 'Unidade de Estabelecimento'),
+        (TERCEIRIZADA, 'Empresa Terceirizada'),
+        (PROFLIBERAL, 'Profissional Liberal'),
+        (PROFAUTONOMO, 'Profissional Autônomo'),
+        (RESPLEGAL, 'Responsável Legal'),
+        (RESPTEC, 'Responsável Técnico')
+    )
     nat_nome = models.CharField(verbose_name='natureza Jurídica / Dependência Administrativa', max_length=100)
-    nat_descricao = models.CharField(verbose_name='Descrição', max_length=200)
+    nat_descricao = models.CharField(verbose_name='descrição', max_length=200)
+    nat_categoria = models.CharField(verbose_name='categoria', max_length=1, choices=OPCOES, default=ESTABELECIMENTO,
+                                     help_text="Esta opção só aparecerá nesta categoria de cadastro")
 
     class Meta:
         permissions = (

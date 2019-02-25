@@ -21,7 +21,9 @@
 {% endblock %}
 
 {% block title %} SIVISAM - Natureza Jurídica / Dependência Administrativa {% endblock %}
-
+{% block return %}
+       <li class="pull-right"><a href="{% url 'natureza_list' %}"><i class="material-icons">chevron_left</i></a></li>
+{% endblock %}
 {% block content %}
 
 <div class="row clearfix">
@@ -44,7 +46,19 @@
                 <div class="col-sm-10"><div class="form-group bmd-form-group is-filled">{{ natureza.nat_descricao }}</div></div>
             </div>
             <div class="form-group form-float">
-                 <a href="{% url 'natureza_list' %}" class="btn btn-default">Voltar</a>
+                <label class="col-sm-2 col-form-label">Categoria</label>
+                <div class="col-sm-10"><div class="form-group bmd-form-group is-filled">
+                    {% if natureza.nat_categoria == '1' %}Estabelecimento Comercial{% endif %}
+                    {% if natureza.nat_categoria == '2' %}Unidade de Estabelecimento{% endif %}
+                    {% if natureza.nat_categoria == '3' %}Empresa Terceirizada{% endif %}
+                    {% if natureza.nat_categoria == '4' %}Profissional Liberal{% endif %}
+                    {% if natureza.nat_categoria == '5' %}Profissional Autônomo{% endif %}
+                    {% if natureza.nat_categoria == '6' %}Responsável Legal{% endif %}
+                    {% if natureza.nat_categoria == '7' %}Responsável Técnico{% endif %}
+                </div></div>
+            </div>
+            <div class="form-group form-float">
+                 <a href="{% url 'natureza_list' %}" class="btn btn-primary btn-lg">Voltar</a>
             </div>
         </div>
      </div>

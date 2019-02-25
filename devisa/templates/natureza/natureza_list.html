@@ -20,7 +20,9 @@
     <link href="{% static 'css/themes/all-themes.css' %}" rel="stylesheet" />
 {% endblock %}
 {% block title %} SIVISAM - Natureza Jurídica / Dependência Administrativa {% endblock %}
-
+{% block return %}
+       <li class="pull-right"><a href="{% url 'devisa' %}"><i class="material-icons">chevron_left</i></a></li>
+{% endblock %}
 {% block content %}
 
 <div class="row clearfix">
@@ -32,12 +34,11 @@
                             </h2>
                             <ul class="header-dropdown m-r--5">
                                 <li class="dropdown">
-                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                        <i class="material-icons">more_vert</i>
+                                    <a href="{% url 'natureza_create' %}">
+                                        <button type="button" class="btn bg-teal btn-block btn-lg waves-effect">
+                                            Cadastrar Natureza / Dependência
+                                        </button>
                                     </a>
-                                    <ul class="dropdown-menu pull-right">
-                                        <li><a href="{% url 'natureza_create' %}">Cadastrar Nova Natureza Jurídica / Dependência Administrativa</a></li>
-                                    </ul>
                                 </li>
                             </ul>
                         </div>
@@ -49,6 +50,7 @@
                                             <th>#</th>
                                             <th>Nome</th>
                                             <th>Descrição</th>
+                                            <th>Categoria</th>
                                             <th>Ações</th>
                                         </tr>
                                     </thead>
@@ -58,6 +60,15 @@
                                             <td>{{ natureza.id }}</td>
                                             <td>{{ natureza.nat_nome }}</td>
                                             <td>{{ natureza.nat_descricao }}</td>
+                                            <td>
+                                                {% if natureza.nat_categoria == '1' %}Estabelecimento Comercial{% endif %}
+                                                {% if natureza.nat_categoria == '2' %}Unidade de Estabelecimento{% endif %}
+                                                {% if natureza.nat_categoria == '3' %}Empresa Terceirizada{% endif %}
+                                                {% if natureza.nat_categoria == '4' %}Profissional Liberal{% endif %}
+                                                {% if natureza.nat_categoria == '5' %}Profissional Autônomo{% endif %}
+                                                {% if natureza.nat_categoria == '6' %}Responsável Legal{% endif %}
+                                                {% if natureza.nat_categoria == '7' %}Responsável Técnico{% endif %}
+                                            </td>
                                             <td style="width: 150px;">
                                                 <a href="{% url 'natureza_view' natureza.id %}" class="btn"><i class="material-icons">search</i></a>
                                                 <a href="{% url 'natureza_update' natureza.id %}" class="btn"><i class="material-icons">mode_edit</i></a>

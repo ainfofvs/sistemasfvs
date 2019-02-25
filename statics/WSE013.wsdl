@@ -1,0 +1,755 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="WSE013Service" targetNamespace="http://ws.ie.gov.br/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://ws.ie.gov.br/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http">
+  <wsdl:types>
+    <xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://ws.ie.gov.br/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="confirmaRespostaOrgao" type="tns:confirmaRespostaOrgao"/>
+      <xs:element name="confirmaRespostaOrgaoResponse" type="tns:confirmaRespostaOrgaoResponse"/>
+      <xs:element name="informaRecebimento" type="tns:informaRecebimento"/>
+      <xs:element name="informaRecebimentoResponse" type="tns:informaRecebimentoResponse"/>
+      <xs:element name="recuperaEstabelecimentoPorIdentificador" type="tns:recuperaEstabelecimentoPorIdentificador"/>
+      <xs:element name="recuperaEstabelecimentoPorIdentificadorResponse" type="tns:recuperaEstabelecimentoPorIdentificadorResponse"/>
+      <xs:element name="recuperaEstabelecimentos" type="tns:recuperaEstabelecimentos"/>
+      <xs:element name="recuperaEstabelecimentosResponse" type="tns:recuperaEstabelecimentosResponse"/>
+      <xs:element name="recuperaQuantidadeDeRegistrosNaFila" type="tns:recuperaQuantidadeDeRegistrosNaFila"/>
+      <xs:element name="recuperaQuantidadeDeRegistrosNaFilaNaoRespondido" type="tns:recuperaQuantidadeDeRegistrosNaFilaNaoRespondido"/>
+      <xs:element name="recuperaQuantidadeDeRegistrosNaFilaNaoRespondidoResponse" type="tns:recuperaQuantidadeDeRegistrosNaFilaNaoRespondidoResponse"/>
+      <xs:element name="recuperaQuantidadeDeRegistrosNaFilaResponse" type="tns:recuperaQuantidadeDeRegistrosNaFilaResponse"/>
+      <xs:element name="reenviaEstabelecimento" type="tns:reenviaEstabelecimento"/>
+      <xs:element name="reenviaEstabelecimentoResponse" type="tns:reenviaEstabelecimentoResponse"/>
+      <xs:complexType name="confirmaRespostaOrgao">
+        <xs:sequence>
+          <xs:element name="wsE013Request" type="tns:wse013ConfirmaRespostaRequestVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="wse013ConfirmaRespostaRequestVo">
+        <xs:complexContent>
+          <xs:extension base="tns:autenticacaoRequestVo">
+            <xs:sequence>
+              <xs:element minOccurs="0" name="identificador" type="xs:string"/>
+              <xs:element minOccurs="0" name="cnpj" type="xs:string"/>
+              <xs:element name="codSituacao" type="xs:string"/>
+              <xs:element minOccurs="0" name="evento" type="xs:string"/>
+              <xs:element minOccurs="0" name="numeroInscricao" type="xs:string"/>
+              <xs:element minOccurs="0" name="numeroAlvara" type="xs:string"/>
+              <xs:element minOccurs="0" name="observacao" type="xs:string"/>
+              <xs:element minOccurs="0" name="link" type="xs:string"/>
+              <xs:element minOccurs="0" name="arquivoPDF" type="xs:base64Binary"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="autenticacaoRequestVo">
+        <xs:sequence>
+          <xs:element name="accessKeyId" type="xs:string"/>
+          <xs:element name="secretAccessKey" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="confirmaRespostaOrgaoResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:wsRetornoVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="wsRetornoVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="codigoRetornoWSEnum" type="tns:codigoRetornoWSEnum"/>
+          <xs:element minOccurs="0" name="mensagem" type="xs:string"/>
+          <xs:element minOccurs="0" name="cnpj" type="xs:string"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="identificadorInvalido" nillable="true" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="informaRecebimento">
+        <xs:sequence>
+          <xs:element name="wsE013Request" type="tns:wse013InformaRecebimentoRequestVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="wse013InformaRecebimentoRequestVo">
+        <xs:complexContent>
+          <xs:extension base="tns:autenticacaoRequestVo">
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="identificador" type="xs:string"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="informaRecebimentoResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:wsRetornoVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="reenviaEstabelecimento">
+        <xs:sequence>
+          <xs:element name="wsE013Request" type="tns:wse013ReenviaEstabelecimentoRequestVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="wse013ReenviaEstabelecimentoRequestVo">
+        <xs:complexContent>
+          <xs:extension base="tns:autenticacaoRequestVo">
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="identificador" type="xs:string"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="reenviaEstabelecimentoResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:wsRetornoVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="recuperaEstabelecimentos">
+        <xs:sequence>
+          <xs:element name="wsE013Request" type="tns:wse013RecuperaEstabelecimentosRequestVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="wse013RecuperaEstabelecimentosRequestVo">
+        <xs:complexContent>
+          <xs:extension base="tns:autenticacaoRequestVo">
+            <xs:sequence>
+              <xs:element name="maximoRegistros" type="xs:long"/>
+              <xs:element minOccurs="0" name="versao" type="xs:string"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="recuperaEstabelecimentosResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:retornoRedesimVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="retornoRedesimVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="status" type="tns:codigoRetornoWSEnum"/>
+          <xs:element minOccurs="0" name="versao" type="xs:string"/>
+          <xs:element minOccurs="0" name="ultimaVersaoDisponivel" type="xs:string"/>
+          <xs:element minOccurs="0" name="mensagem" type="xs:string"/>
+          <xs:element minOccurs="0" name="registrosRedesim" type="tns:registrosRedesimVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="registrosRedesimVo">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="registroRedesim" nillable="true" type="tns:registroRedesimVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="registroRedesimVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="identificador" type="xs:string"/>
+          <xs:element minOccurs="0" name="orgaoEvento" type="xs:string"/>
+          <xs:element minOccurs="0" name="eventos" type="tns:eventosVo"/>
+          <xs:element minOccurs="0" name="atoAprovado" type="tns:atoAprovadoVo"/>
+          <xs:element minOccurs="0" name="dadosRedesim" type="tns:dadosRedesimVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="eventosVo">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="evento" nillable="true" type="tns:eventoVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="eventoVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="codEvento" type="xs:string"/>
+          <xs:element minOccurs="0" name="identificadorTipoSocioEvento" type="tns:identificadorTipoPessoa"/>
+          <xs:element minOccurs="0" name="cnpjCpfSocioEvento" type="xs:string"/>
+          <xs:element minOccurs="0" name="dataEvento" type="xs:string"/>
+          <xs:element minOccurs="0" name="dataSaidaSocio" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="atoAprovadoVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="viabilidade" type="xs:string"/>
+          <xs:element minOccurs="0" name="coletorEstadualWeb" type="xs:string"/>
+          <xs:element minOccurs="0" name="numeroProcessoOrgaoRegistro" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="dadosRedesimVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="cnpj" type="xs:string"/>
+          <xs:element minOccurs="0" name="numeroOrgaoRegistro" type="xs:string"/>
+          <xs:element minOccurs="0" name="nomeEmpresarial" type="xs:string"/>
+          <xs:element minOccurs="0" name="nomeFantasia" type="xs:string"/>
+          <xs:element minOccurs="0" name="codTipoOrgaoRegistro" type="xs:string"/>
+          <xs:element minOccurs="0" name="tipoOrgaoRegistro" type="tns:tipoOrgaoRegistroVo"/>
+          <xs:element minOccurs="0" name="identificadorMatrizFilial" type="tns:identificadorMatrizFilialEnum"/>
+          <xs:element minOccurs="0" name="codNaturezaJuridica" type="xs:string"/>
+          <xs:element minOccurs="0" name="dataAberturaEstabelecimento" type="xs:string"/>
+          <xs:element minOccurs="0" name="dataAberturaEmpresa" type="xs:string"/>
+          <xs:element minOccurs="0" name="dataInicioAtividade" type="xs:string"/>
+          <xs:element minOccurs="0" name="nuProcessoOrgaoRegistro" type="xs:string"/>
+          <xs:element minOccurs="0" name="situacaoCadastralRFB" type="tns:situacaoCadastralVo"/>
+          <xs:element minOccurs="0" name="situacaoCadastralOrgaoRegistro" type="tns:situacaoCadastralVo"/>
+          <xs:element minOccurs="0" name="opcaoSimplesNacional" type="tns:identificadorSNEnum"/>
+          <xs:element minOccurs="0" name="porte" type="tns:porteEnum"/>
+          <xs:element minOccurs="0" name="opcaoSimei" type="tns:identificadorSNEnum"/>
+          <xs:element minOccurs="0" name="tipoUnidade" type="tns:tipoUnidadeEnum"/>
+          <xs:element minOccurs="0" name="tipoUnidadeRFB" type="tns:tipoUnidadeVo"/>
+          <xs:element minOccurs="0" name="formasAtuacao" type="tns:formasAtuacaoVo"/>
+          <xs:element minOccurs="0" name="nuAlvara" type="xs:string"/>
+          <xs:element minOccurs="0" name="nuInscricaoMunicipal" type="xs:string"/>
+          <xs:element minOccurs="0" name="nuInscricaoEstadual" type="xs:string"/>
+          <xs:element minOccurs="0" name="capitalSocial" type="xs:string"/>
+          <xs:element minOccurs="0" name="capitalSocialMatriz" type="xs:string"/>
+          <xs:element minOccurs="0" name="capitalIntegralizado" type="xs:string"/>
+          <xs:element minOccurs="0" name="valorQuota" type="xs:string"/>
+          <xs:element minOccurs="0" name="regiaoAdministrativa" type="tns:regiaoAdministrativaVo"/>
+          <xs:element minOccurs="0" name="possuiEstabelecimento" type="tns:identificadorSNEnum"/>
+          <xs:element minOccurs="0" name="areaTotalEdificacao" type="xs:string"/>
+          <xs:element minOccurs="0" name="areaTotalUtilizada" type="xs:string"/>
+          <xs:element minOccurs="0" name="ultimaViabilidadeVinculada" type="xs:string"/>
+          <xs:element minOccurs="0" name="ultimaViabilidadeAnaliseEndereco" type="xs:string"/>
+          <xs:element minOccurs="0" name="dataUltimaAnaliseEndereco" type="xs:string"/>
+          <xs:element minOccurs="0" name="ultimoColetorEstadualWebVinculado" type="xs:string"/>
+          <xs:element minOccurs="0" name="inscricaoImobiliaria" type="xs:string"/>
+          <xs:element minOccurs="0" name="endereco" type="tns:enderecoVo"/>
+          <xs:element minOccurs="0" name="contato" type="tns:contatoVo"/>
+          <xs:element minOccurs="0" name="responsavelPeranteCnpj" type="tns:responsavelPeranteCnpjVo"/>
+          <xs:element minOccurs="0" name="atividadesEconomica" type="tns:atividadesEconomicaVo"/>
+          <xs:element minOccurs="0" name="analiseEndereco" type="tns:analiseEnderecoVo"/>
+          <xs:element minOccurs="0" name="horariosFuncionamento" type="tns:horariosFuncionamentoVo"/>
+          <xs:element minOccurs="0" name="perguntas" type="tns:perguntasVo"/>
+          <xs:element minOccurs="0" name="socios" type="tns:sociosVo"/>
+          <xs:element minOccurs="0" name="representantesLegais" type="tns:representantesLegaisVo"/>
+          <xs:element minOccurs="0" name="matriz" type="tns:matrizVo"/>
+          <xs:element minOccurs="0" name="filiais" type="tns:filiaisVo"/>
+          <xs:element minOccurs="0" name="contador" type="tns:contadorVo"/>
+          <xs:element minOccurs="0" name="licenciamentoPerguntas" type="tns:licenciamentoPerguntasVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="tipoOrgaoRegistroVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+          <xs:element minOccurs="0" name="descricao" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="situacaoCadastralVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+          <xs:element minOccurs="0" name="descricao" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="tipoUnidadeVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="codTipoUnidade" type="xs:string"/>
+          <xs:element minOccurs="0" name="descTipoUnidade" type="xs:string"/>
+          <xs:element minOccurs="0" name="formasAtuacao" type="tns:formasAtuacaoVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="formasAtuacaoVo">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="formaAtuacao" nillable="true" type="tns:formaAtuacaoVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="formaAtuacaoVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+          <xs:element minOccurs="0" name="descricao" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="regiaoAdministrativaVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+          <xs:element minOccurs="0" name="nome" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="enderecoVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="cep" type="xs:string"/>
+          <xs:element minOccurs="0" name="logradouro" type="xs:string"/>
+          <xs:element minOccurs="0" name="codTipoLogradouro" type="xs:string"/>
+          <xs:element minOccurs="0" name="numLogradouro" type="xs:string"/>
+          <xs:element minOccurs="0" name="complemento" type="xs:string"/>
+          <xs:element minOccurs="0" name="bairro" type="xs:string"/>
+          <xs:element minOccurs="0" name="codMunicipio" type="xs:string"/>
+          <xs:element minOccurs="0" name="uf" type="xs:string"/>
+          <xs:element minOccurs="0" name="enderecoExterior" type="xs:string"/>
+          <xs:element minOccurs="0" name="codPais" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="contatoVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="dddTelefone1" type="xs:string"/>
+          <xs:element minOccurs="0" name="telefone1" type="xs:string"/>
+          <xs:element minOccurs="0" name="dddTelefone2" type="xs:string"/>
+          <xs:element minOccurs="0" name="telefone2" type="xs:string"/>
+          <xs:element minOccurs="0" name="dddFax" type="xs:string"/>
+          <xs:element minOccurs="0" name="fax" type="xs:string"/>
+          <xs:element minOccurs="0" name="correioEletronico" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="responsavelPeranteCnpjVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="nomeResponsavel" type="xs:string"/>
+          <xs:element minOccurs="0" name="cpfResponsavel" type="xs:string"/>
+          <xs:element minOccurs="0" name="codQualificResponsavel" type="xs:string"/>
+          <xs:element minOccurs="0" name="enderecoResponsavel" type="tns:enderecoVo"/>
+          <xs:element minOccurs="0" name="contato" type="tns:contatoVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="atividadesEconomicaVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="cnaeFiscal" type="tns:cnaeVo"/>
+          <xs:element minOccurs="0" name="cnaesSecundarias" type="tns:cnaeSecundarioVo"/>
+          <xs:element minOccurs="0" name="objetoSocial" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="cnaeVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+          <xs:element minOccurs="0" name="desdobramento" type="xs:string"/>
+          <xs:element minOccurs="0" name="complementoCnae" type="xs:string"/>
+          <xs:element minOccurs="0" name="analiseCnae" type="tns:analiseCnaeVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="analiseCnaeVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="complemento" type="xs:string"/>
+          <xs:element minOccurs="0" name="restricoes" type="tns:restricoesVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="restricoesVo">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="restricao" nillable="true" type="tns:restricaoVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="restricaoVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="codigo" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="cnaeSecundarioVo">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="cnaeSecundaria" nillable="true" type="tns:cnaeVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="analiseEnderecoVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="complemento" type="xs:string"/>
+          <xs:element minOccurs="0" name="restricoes" type="tns:restricoesVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="horariosFuncionamentoVo">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="horarioFuncionamento" nillable="true" type="tns:horarioFuncionamentoVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="horarioFuncionamentoVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="dia" type="tns:diasEnum"/>
+          <xs:element minOccurs="0" name="horaInicio" type="xs:string"/>
+          <xs:element minOccurs="0" name="horaFim" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="perguntasVo">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="pergunta" nillable="true" type="tns:perguntaVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="perguntaVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="descricao" type="xs:string"/>
+          <xs:element minOccurs="0" name="resposta" type="xs:string"/>
+          <xs:element minOccurs="0" name="codPergunta" type="xs:long"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="sociosVo">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="socio" nillable="true" type="tns:socioVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="socioVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="identificadorTipoSocio" type="tns:identificadorTipoPessoa"/>
+          <xs:element minOccurs="0" name="cnpjCpfSocio" type="xs:string"/>
+          <xs:element minOccurs="0" name="numeroOrgaoRegistro" type="xs:string"/>
+          <xs:element minOccurs="0" name="capitalSocialSocio" type="xs:string"/>
+          <xs:element minOccurs="0" name="codQualificacaoSocio" type="xs:string"/>
+          <xs:element minOccurs="0" name="nome" type="xs:string"/>
+          <xs:element minOccurs="0" name="nacionalidade" type="xs:string"/>
+          <xs:element minOccurs="0" name="estadoCivil" type="xs:string"/>
+          <xs:element minOccurs="0" name="sexo" type="xs:string"/>
+          <xs:element minOccurs="0" name="dataNascimento" type="xs:string"/>
+          <xs:element minOccurs="0" name="identidade" type="xs:string"/>
+          <xs:element minOccurs="0" name="orgaoEmissor" type="xs:string"/>
+          <xs:element minOccurs="0" name="ufOrgaoEmissor" type="xs:string"/>
+          <xs:element minOccurs="0" name="profissao" type="xs:string"/>
+          <xs:element minOccurs="0" name="dataInclusao" type="xs:string"/>
+          <xs:element minOccurs="0" name="dataInicioMandato" type="xs:string"/>
+          <xs:element minOccurs="0" name="dataFimMandato" type="xs:string"/>
+          <xs:element minOccurs="0" name="representantesLegaisSocio" type="tns:representantesLegaisSocioVo"/>
+          <xs:element minOccurs="0" name="enderecoSocio" type="tns:enderecoVo"/>
+          <xs:element minOccurs="0" name="contatoSocio" type="tns:contatoVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="representantesLegaisSocioVo">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="representanteLegalSocioVo" nillable="true" type="tns:representanteLegalSocioVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="representanteLegalSocioVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="nome" type="xs:string"/>
+          <xs:element minOccurs="0" name="cpf" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="representantesLegaisVo">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="representanteLegal" nillable="true" type="tns:representanteLegalVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="representanteLegalVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="nome" type="xs:string"/>
+          <xs:element minOccurs="0" name="cpf" type="xs:string"/>
+          <xs:element minOccurs="0" name="codQualificacao" type="xs:string"/>
+          <xs:element minOccurs="0" name="identidade" type="xs:string"/>
+          <xs:element minOccurs="0" name="orgaoEmissor" type="xs:string"/>
+          <xs:element minOccurs="0" name="ufOrgaoEmissor" type="xs:string"/>
+          <xs:element minOccurs="0" name="dataNascimento" type="xs:string"/>
+          <xs:element minOccurs="0" name="sexo" type="xs:string"/>
+          <xs:element minOccurs="0" name="nacionalidade" type="xs:string"/>
+          <xs:element minOccurs="0" name="profissao" type="xs:string"/>
+          <xs:element minOccurs="0" name="dataInclusao" type="xs:string"/>
+          <xs:element minOccurs="0" name="endereco" type="tns:enderecoVo"/>
+          <xs:element minOccurs="0" name="contato" type="tns:contatoVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="matrizVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="cnpjMatriz" type="xs:string"/>
+          <xs:element minOccurs="0" name="ufMatriz" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="filiaisVo">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="filial" nillable="true" type="tns:filialVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="filialVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="cnpjFilial" type="xs:string"/>
+          <xs:element minOccurs="0" name="ufFilial" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="contadorVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="crc" type="xs:string"/>
+          <xs:element minOccurs="0" name="ufCrc" type="xs:string"/>
+          <xs:element minOccurs="0" name="codClassificacaoCrc" type="xs:string"/>
+          <xs:element minOccurs="0" name="codTipoClassificacaoCrc" type="xs:string"/>
+          <xs:element minOccurs="0" name="cnpjCpf" type="xs:string"/>
+          <xs:element minOccurs="0" name="nome" type="xs:string"/>
+          <xs:element minOccurs="0" name="nomeEmpresaContabil" type="xs:string"/>
+          <xs:element minOccurs="0" name="identidade" type="xs:string"/>
+          <xs:element minOccurs="0" name="orgaoEmissor" type="xs:string"/>
+          <xs:element minOccurs="0" name="ufOrgaoEmissor" type="xs:string"/>
+          <xs:element minOccurs="0" name="substitutaTributaria" type="tns:identificadorSNEnum"/>
+          <xs:element minOccurs="0" name="identificadorTipoContador" type="tns:identificadorTipoPessoa"/>
+          <xs:element minOccurs="0" name="endereco" type="tns:enderecoVo"/>
+          <xs:element minOccurs="0" name="contato" type="tns:contatoVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="licenciamentoPerguntasVo">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="licenciamentoPergunta" nillable="true" type="tns:licenciamentoPerguntaVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="licenciamentoPerguntaVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="dsPergunta" type="xs:string"/>
+          <xs:element minOccurs="0" name="cdPergunta" type="xs:string"/>
+          <xs:element minOccurs="0" name="dsResposta" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="recuperaQuantidadeDeRegistrosNaFilaNaoRespondido">
+        <xs:sequence>
+          <xs:element name="wsE013Request" type="tns:wse013RecuperaQuantidadeDeRegistrosNaFilaRequestVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="wse013RecuperaQuantidadeDeRegistrosNaFilaRequestVo">
+        <xs:complexContent>
+          <xs:extension base="tns:autenticacaoRequestVo">
+            <xs:sequence/>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="recuperaQuantidadeDeRegistrosNaFilaNaoRespondidoResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:retornoQuantidadeDeRegistrosNaFilaVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="retornoQuantidadeDeRegistrosNaFilaVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="quantidadeDeRegistrosNaFila" type="xs:string"/>
+          <xs:element minOccurs="0" name="registrosNaFila" type="tns:dadosRegistrosNaFilaVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="dadosRegistrosNaFilaVo">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="registro" nillable="true" type="tns:registroNaFilaVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="registroNaFilaVo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="identificador" type="xs:string"/>
+          <xs:element minOccurs="0" name="cnpj" type="xs:string"/>
+          <xs:element minOccurs="0" name="eventos" type="tns:eventosVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="recuperaEstabelecimentoPorIdentificador">
+        <xs:sequence>
+          <xs:element name="wsE013Request" type="tns:wse013RecuperaEstabelecimentoPorIdentificadorRequestVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="wse013RecuperaEstabelecimentoPorIdentificadorRequestVo">
+        <xs:complexContent>
+          <xs:extension base="tns:autenticacaoRequestVo">
+            <xs:sequence>
+              <xs:element name="identificador" type="xs:long"/>
+              <xs:element minOccurs="0" name="versao" type="xs:string"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="recuperaEstabelecimentoPorIdentificadorResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:retornoRedesimVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="recuperaQuantidadeDeRegistrosNaFila">
+        <xs:sequence>
+          <xs:element name="wsE013Request" type="tns:wse013RecuperaQuantidadeDeRegistrosNaFilaRequestVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="recuperaQuantidadeDeRegistrosNaFilaResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:retornoQuantidadeDeRegistrosNaFilaVo"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="codigoRetornoWSEnum">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="OK"/>
+          <xs:enumeration value="NOK"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="identificadorTipoPessoa">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="PJ"/>
+          <xs:enumeration value="PF"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="identificadorMatrizFilialEnum">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="M"/>
+          <xs:enumeration value="F"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="identificadorSNEnum">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="S"/>
+          <xs:enumeration value="N"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="porteEnum">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="ME"/>
+          <xs:enumeration value="EPP"/>
+          <xs:enumeration value="OUTROS"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="tipoUnidadeEnum">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="P"/>
+          <xs:enumeration value="A"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="diasEnum">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="SEG"/>
+          <xs:enumeration value="TER"/>
+          <xs:enumeration value="QUA"/>
+          <xs:enumeration value="QUI"/>
+          <xs:enumeration value="SEX"/>
+          <xs:enumeration value="SAB"/>
+          <xs:enumeration value="DOM"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="IntegradorEstadualException" type="tns:IntegradorEstadualException"/>
+      <xs:complexType name="IntegradorEstadualException">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="message" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="confirmaRespostaOrgaoResponse">
+    <wsdl:part element="tns:confirmaRespostaOrgaoResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="informaRecebimento">
+    <wsdl:part element="tns:informaRecebimento" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="recuperaEstabelecimentosResponse">
+    <wsdl:part element="tns:recuperaEstabelecimentosResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="recuperaEstabelecimentos">
+    <wsdl:part element="tns:recuperaEstabelecimentos" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="recuperaQuantidadeDeRegistrosNaFilaNaoRespondido">
+    <wsdl:part element="tns:recuperaQuantidadeDeRegistrosNaFilaNaoRespondido" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="recuperaEstabelecimentoPorIdentificador">
+    <wsdl:part element="tns:recuperaEstabelecimentoPorIdentificador" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="confirmaRespostaOrgao">
+    <wsdl:part element="tns:confirmaRespostaOrgao" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="reenviaEstabelecimentoResponse">
+    <wsdl:part element="tns:reenviaEstabelecimentoResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="recuperaEstabelecimentoPorIdentificadorResponse">
+    <wsdl:part element="tns:recuperaEstabelecimentoPorIdentificadorResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="recuperaQuantidadeDeRegistrosNaFilaResponse">
+    <wsdl:part element="tns:recuperaQuantidadeDeRegistrosNaFilaResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="reenviaEstabelecimento">
+    <wsdl:part element="tns:reenviaEstabelecimento" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="IntegradorEstadualException">
+    <wsdl:part element="tns:IntegradorEstadualException" name="IntegradorEstadualException"/>
+  </wsdl:message>
+  <wsdl:message name="recuperaQuantidadeDeRegistrosNaFilaNaoRespondidoResponse">
+    <wsdl:part element="tns:recuperaQuantidadeDeRegistrosNaFilaNaoRespondidoResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="recuperaQuantidadeDeRegistrosNaFila">
+    <wsdl:part element="tns:recuperaQuantidadeDeRegistrosNaFila" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="informaRecebimentoResponse">
+    <wsdl:part element="tns:informaRecebimentoResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:portType name="WSE013">
+    <wsdl:operation name="confirmaRespostaOrgao">
+      <wsdl:input message="tns:confirmaRespostaOrgao" name="confirmaRespostaOrgao"/>
+      <wsdl:output message="tns:confirmaRespostaOrgaoResponse" name="confirmaRespostaOrgaoResponse"/>
+      <wsdl:fault message="tns:IntegradorEstadualException" name="IntegradorEstadualException"/>
+    </wsdl:operation>
+    <wsdl:operation name="informaRecebimento">
+      <wsdl:input message="tns:informaRecebimento" name="informaRecebimento"/>
+      <wsdl:output message="tns:informaRecebimentoResponse" name="informaRecebimentoResponse"/>
+      <wsdl:fault message="tns:IntegradorEstadualException" name="IntegradorEstadualException"/>
+    </wsdl:operation>
+    <wsdl:operation name="reenviaEstabelecimento">
+      <wsdl:input message="tns:reenviaEstabelecimento" name="reenviaEstabelecimento"/>
+      <wsdl:output message="tns:reenviaEstabelecimentoResponse" name="reenviaEstabelecimentoResponse"/>
+      <wsdl:fault message="tns:IntegradorEstadualException" name="IntegradorEstadualException"/>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaEstabelecimentos">
+      <wsdl:input message="tns:recuperaEstabelecimentos" name="recuperaEstabelecimentos"/>
+      <wsdl:output message="tns:recuperaEstabelecimentosResponse" name="recuperaEstabelecimentosResponse"/>
+      <wsdl:fault message="tns:IntegradorEstadualException" name="IntegradorEstadualException"/>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaQuantidadeDeRegistrosNaFilaNaoRespondido">
+      <wsdl:input message="tns:recuperaQuantidadeDeRegistrosNaFilaNaoRespondido" name="recuperaQuantidadeDeRegistrosNaFilaNaoRespondido"/>
+      <wsdl:output message="tns:recuperaQuantidadeDeRegistrosNaFilaNaoRespondidoResponse" name="recuperaQuantidadeDeRegistrosNaFilaNaoRespondidoResponse"/>
+      <wsdl:fault message="tns:IntegradorEstadualException" name="IntegradorEstadualException"/>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaEstabelecimentoPorIdentificador">
+      <wsdl:input message="tns:recuperaEstabelecimentoPorIdentificador" name="recuperaEstabelecimentoPorIdentificador"/>
+      <wsdl:output message="tns:recuperaEstabelecimentoPorIdentificadorResponse" name="recuperaEstabelecimentoPorIdentificadorResponse"/>
+      <wsdl:fault message="tns:IntegradorEstadualException" name="IntegradorEstadualException"/>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaQuantidadeDeRegistrosNaFila">
+      <wsdl:input message="tns:recuperaQuantidadeDeRegistrosNaFila" name="recuperaQuantidadeDeRegistrosNaFila"/>
+      <wsdl:output message="tns:recuperaQuantidadeDeRegistrosNaFilaResponse" name="recuperaQuantidadeDeRegistrosNaFilaResponse"/>
+      <wsdl:fault message="tns:IntegradorEstadualException" name="IntegradorEstadualException"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WSE013ServiceSoapBinding" type="tns:WSE013">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="confirmaRespostaOrgao">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="confirmaRespostaOrgao">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="confirmaRespostaOrgaoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="IntegradorEstadualException">
+        <soap:fault name="IntegradorEstadualException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="informaRecebimento">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="informaRecebimento">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="informaRecebimentoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="IntegradorEstadualException">
+        <soap:fault name="IntegradorEstadualException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="reenviaEstabelecimento">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="reenviaEstabelecimento">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="reenviaEstabelecimentoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="IntegradorEstadualException">
+        <soap:fault name="IntegradorEstadualException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaEstabelecimentos">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="recuperaEstabelecimentos">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="recuperaEstabelecimentosResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="IntegradorEstadualException">
+        <soap:fault name="IntegradorEstadualException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaQuantidadeDeRegistrosNaFilaNaoRespondido">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="recuperaQuantidadeDeRegistrosNaFilaNaoRespondido">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="recuperaQuantidadeDeRegistrosNaFilaNaoRespondidoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="IntegradorEstadualException">
+        <soap:fault name="IntegradorEstadualException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaEstabelecimentoPorIdentificador">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="recuperaEstabelecimentoPorIdentificador">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="recuperaEstabelecimentoPorIdentificadorResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="IntegradorEstadualException">
+        <soap:fault name="IntegradorEstadualException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="recuperaQuantidadeDeRegistrosNaFila">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="recuperaQuantidadeDeRegistrosNaFila">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="recuperaQuantidadeDeRegistrosNaFilaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="IntegradorEstadualException">
+        <soap:fault name="IntegradorEstadualException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WSE013Service">
+    <wsdl:port binding="tns:WSE013ServiceSoapBinding" name="WSE013Port">
+      <soap:address location="https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE013?wsdl"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
