@@ -19,9 +19,9 @@
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="{% static 'css/themes/all-themes.css' %}" rel="stylesheet" />
 {% endblock %}
-{% block title %} SIVISAM - País {% endblock %}
+{% block title %} SIVISAM - Atividades Terceirizadas {% endblock %}
 {% block return %}
-       <li class="pull-right"><a href="{% url 'pais_list' %}"><i class="material-icons">chevron_left</i></a></li>
+       <li class="pull-right"><a href="{% url 'terceirizada_listws' model.entidade %}"><i class="material-icons">chevron_left</i></a></li>
 {% endblock %}
 
 {% block content %}
@@ -35,12 +35,14 @@
                             </h2>
                         </div>
                         <div class="body">
-                            <h2>Tem certeza que deseja excluir {{ model.pais_nome }} ?</h2>
-
+                            <h4>Tem certeza que deseja desvincular a atividade "{{ model.subatividade }}" da empresa terceirizada "{{ terceirizada.nomeFantasia }} - {{ terceirizada.cnpj }}" ?</h4>
+                            <br/>
+                            * Isto não apagará a atividade, apenas desvinculará da empresa terceirizada.
+                            <br/><br/><br/>
                             <form method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-danger btn-lg">Excluir</button>
-                                <a href="{% url 'pais_list' %}" class="btn btn-default btn-lg">Cancelar</a>
+                                <button type="submit" class="btn btn-danger btn-lg">Retirar Terceirização</button>
+                                <a href="{% url 'terceirizada_listws' model.entidade %}" class="btn btn-default btn-lg">Cancelar</a>
                             </form>
                         </div>
                     </div>

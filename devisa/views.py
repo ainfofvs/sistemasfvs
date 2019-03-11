@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, permission_required
 from .models import Pais, Estado, Municipio, Bairro, Area, Atividade, Subatividade, Escolaridade
 from .models import Formacao, Natureza, Entidade, EntidadeSubatividade, EntidadeResponsavel, Conselho, EntidadeUnidade
-from .models import Areaproducao, Classeproducao, Linhaproducao, Formaproducao, EntidadeFormaproducao, EntidadeClasseproducao
+from .models import Areaproducao, Classeproducao, Linhaproducao, Formaproducao, EntidadeFormaproducao, EntidadeClasseproducao, \
+    EntidadeSubatividadeWS, EntidadeFormaproducaoWS, EntidadeClasseproducaoWS
 from .forms import PaisForm, EstadoForm, MunicipioForm, BairroForm, AreaForm, EntidadeForm
 from .forms import AtividadeForm, SubatividadeForm, EscolaridadeForm, FormacaoForm, NaturezaForm, ConselhoForm, EntidadeUnidadeForm
 from .forms import AreaproducaoForm, ClasseproducaoForm, LinhaproducaoForm, FormaproducaoForm
@@ -10,6 +11,8 @@ from django.contrib import messages
 import re
 import xmltodict
 import json
+from xml.dom import minidom
+import xml.etree.ElementTree as ET
 from django.core.validators import EMPTY_VALUES
 from django.utils.translation import ugettext_lazy as _
 
@@ -309,27 +312,42 @@ def cnpj_validacao(request):
 
 
 @login_required
+@permission_required('devisa.cnpj_validacao')
+def cnpj_validacao3(request):
+    form = EntidadeForm(request.POST or None, request.FILES or None)
+
+    if request.POST:
+        ent_cnpj = request.POST['ent_cnpj'] #vem com pontos
+        ent_cnpj2 = re.sub("[-/\.]", "", ent_cnpj) # sem pontos
+        if validate_CNPJ(ent_cnpj) == 1:
+            session = Session()
+            session.verify = False
+            transport = Transport(session=session)
+            client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl',
+                            transport=transport)
+            estabelecimento = client.service.wsE031(wsE031Request={
+                'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+                'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+                'cnpj': ent_cnpj2
+            })
+
+            if not estabelecimento:
+                messages.info(request, 'CNPJ não encontrado na base de dados!')
+                return redirect('cnpj_validacao3')
+            else:
+                return redirect('cnpj3', ent_cnpj2)
+
+        else:
+            messages.error(request, 'O CNPJ informado é inválido!')
+            return redirect('cnpj_validacao3')
+
+    return render(request, 'entidade/cnpj_validacao3.html', {'form': form})
+
+
+@login_required
 @permission_required('devisa.cnpj')
 def cnpj(request):
     model = Entidade.objects.filter(ent_tipo_entidade=1)
-
-    # Consumo do WebService - RedeSIM
-    # session = Session()
-    # session.verify = False
-    # transport = Transport(session=session)
-    # client013 = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE013?wsdl', transport=transport)
-    # resultado013 = client013.service.recuperaEstabelecimentos(wsE013Request={
-    #                                                         'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
-    #                                                         'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
-    #                                                         'maximoRegistros': 1
-    #                                                     })
-    #
-    # client031 = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
-    # resultado031 = client031.service.wsE031(wsE031Request={
-    #                                                         'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
-    #                                                         'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
-    #                                                         'cnpj': '28685818000104'
-    #                                                     })
 
     return render(request, 'entidade/cnpj.html', {'entidades': model})
 
@@ -338,38 +356,132 @@ def cnpj(request):
 @permission_required('devisa.cnpj')
 def cnpj2(request):
     form = EntidadeForm(request.POST or None, request.FILES or None)
-    est = ''
     valida = ''
     cnpj = ''
-    nome = ''
-    fantasia = ''
-    matriz_filial = ''
     statusConexao = ''
+    vetor_est = []
+    vetor_respPeranteCnpj = []
+    vetor_respLegais = []
+    vetor_atv = []
+    vetor_unid = []
 
     if request.POST:
         ent_cnpj = request.POST['ent_cnpj']
-        session = Session()
-        session.verify = False
-        transport = Transport(session=session)
-        client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
-        estabelecimento = client.service.wsE031(wsE031Request={
-                                                                'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
-                                                                'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
-                                                                'cnpj': ent_cnpj
-                                                            })
-        cnpj = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.cnpj
-        nome = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeEmpresarial
-        fantasia = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeFantasia
-        matriz_filial = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.identificadorMatrizFilial
-        statusConexao = 'Acesso via Web Service'
-        if matriz_filial=='M':
-            matriz_filial = 'Matriz'
+        if len(ent_cnpj) != 14:
+            messages.error(request, 'O CNPJ informado é inválido!')
         else:
-            matriz_filial = 'Filial'
+            session = Session()
+            session.verify = False
+            transport = Transport(session=session)
+            client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+            estabelecimento = client.service.wsE031(wsE031Request={
+                                                                    'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+                                                                    'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+                                                                    'cnpj': ent_cnpj
+                                                                })
+            cnpj = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.cnpj
+            statusConexao = 'Acesso via Web Service'
+            valida = 'none'
 
-        valida = 'none'
+            vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.cnpj)
+            vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeEmpresarial)
+            vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeFantasia)
+            matriz_filial = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.identificadorMatrizFilial
+            if matriz_filial == 'M':
+                vetor_est.append('Matriz')
+            else:
+                vetor_est.append('Filial')
 
-    return render(request, 'entidade/cnpj2.html', {'form': form, 'cnpj': cnpj, 'nome': nome, 'fantasia': fantasia, 'matriz_filial': matriz_filial, 'valida': valida, 'statusConexao': statusConexao})
+            vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.dataAberturaEstabelecimento)
+            vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.dataAberturaEmpresa)
+            vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.dataInicioAtividade)
+            vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.cep)
+            vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.logradouro)
+            vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.codTipoLogradouro)
+            vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.numLogradouro)
+            vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.complemento)
+            vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.bairro)
+            vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.codMunicipio)
+            vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.uf)
+            vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.enderecoExterior)
+            vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.codPais)
+
+            vetor_respPeranteCnpj.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.responsavelPeranteCnpj)
+
+            vetor_respLegais.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.representantesLegais)
+
+            vetor_atv.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.atividadesEconomica)
+
+            vetor_unid.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.filiais)
+
+    return render(request, 'entidade/cnpj2.html', {'form': form,
+                                                   'cnpj': cnpj,
+                                                   'vetor_est': vetor_est,
+                                                   'vetor_respPeranteCnpj': vetor_respPeranteCnpj,
+                                                   'vetor_respLegais': vetor_respLegais,
+                                                   'vetor_atv': vetor_atv,
+                                                   'vetor_unid': vetor_unid,
+                                                   'valida': valida,
+                                                   'statusConexao': statusConexao})
+
+
+@login_required
+@permission_required('devisa.cnpj')
+def cnpj3(request, ent_cnpj2):
+    vetor_est = []
+    # vetor_respPeranteCnpj = []
+    # vetor_respLegais = []
+    # vetor_atv = []
+    # vetor_unid = []
+    ent_cnpj = ent_cnpj2
+
+    session = Session()
+    session.verify = False
+    transport = Transport(session=session)
+    client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+    estabelecimento = client.service.wsE031(wsE031Request={
+                                                       'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+                                                       'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+                                                       'cnpj': ent_cnpj
+                                             })
+
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.cnpj)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeEmpresarial)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeFantasia)
+    matriz_filial = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.identificadorMatrizFilial
+    if matriz_filial == 'M':
+         vetor_est.append('Matriz')
+    else:
+         vetor_est.append('Filial')
+
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.dataAberturaEstabelecimento)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.dataAberturaEmpresa)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.dataInicioAtividade)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.cep)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.logradouro)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.codTipoLogradouro)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.numLogradouro)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.complemento)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.bairro)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.codMunicipio)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.uf)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.enderecoExterior)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.codPais)
+
+    vetor_respPeranteCnpj = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.responsavelPeranteCnpj
+
+    vetor_respLegais = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.representantesLegais
+
+    vetor_atv = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.atividadesEconomica
+
+    vetor_unid = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.filiais
+
+    return render(request, 'entidade/cnpj3.html', {'cnpj': ent_cnpj,
+                                                   'vetor_est': vetor_est,
+                                                   'vetor_respPeranteCnpj': vetor_respPeranteCnpj,
+                                                   'vetor_respLegais': vetor_respLegais,
+                                                   'vetor_atv': vetor_atv,
+                                                   'vetor_unid': vetor_unid})
 
 
 
@@ -378,6 +490,47 @@ def cnpj2(request):
 def cnpj_view(request, id):
     model = get_object_or_404(Entidade, pk=id)
     return render(request, 'entidade/cnpj_view.html', {'entidade': model})
+
+
+@login_required
+@permission_required('devisa.cnpj_view')
+def cnpj_view2(request, cnpj):
+    session = Session()
+    session.verify = False
+    transport = Transport(session=session)
+    client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+    estabelecimento = client.service.wsE031(wsE031Request={
+        'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+        'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+        'cnpj': cnpj
+    })
+
+    cnpj2 = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.cnpj
+    vetor_est = []
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.cnpj)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeEmpresarial)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeFantasia)
+    matriz_filial = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.identificadorMatrizFilial
+    if matriz_filial == 'M':
+        vetor_est.append('Matriz')
+    else:
+        vetor_est.append('Filial')
+
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.dataAberturaEstabelecimento)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.dataAberturaEmpresa)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.dataInicioAtividade)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.cep)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.logradouro)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.codTipoLogradouro)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.numLogradouro)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.complemento)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.bairro)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.codMunicipio)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.uf)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.enderecoExterior)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.codPais)
+
+    return render(request, 'entidade/cnpj_view2.html', {'cnpj': cnpj2, 'vetor_est': vetor_est})
 
 
 @login_required
@@ -1354,6 +1507,208 @@ def entresptec_delete(request, id):
 # ------------- FIM RESPONSÁVEL TÉCNICO DA ENTIDADE - ENTIDADERESPONSAVELTECNICO ---------------- #
 
 
+
+# ------------- RESPONSÁVEL TÉCNICO DA ENTIDADE 3 WS - ENTIDADERESPONSAVELTECNICO 3 WS ---------------- #
+@login_required
+@permission_required('devisa.entresptec_list')
+def entresptec_listws(request, cnpj):
+    session = Session()
+    session.verify = False
+    transport = Transport(session=session)
+    client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+    estabelecimento = client.service.wsE031(wsE031Request={
+        'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+        'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+        'cnpj': cnpj
+    })
+
+    vetor_est = []
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.cnpj)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeEmpresarial)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeFantasia)
+    matriz_filial = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.identificadorMatrizFilial
+    if matriz_filial == 'M':
+        vetor_est.append('Matriz')
+    else:
+        vetor_est.append('Filial')
+
+    entresptecs = EntidadeSubatividadeWS.objects.filter(entidade=cnpj, responsavel_tecnico__isnull=False).order_by('responsavel_tecnico')
+
+    return render(request, 'entresptecws/entresptec_list.html', {'vetor_est': vetor_est, 'entresptecs': entresptecs})
+
+
+@login_required
+@permission_required('devisa.entresptec_create')
+def entresptec_createws(request, cnpj):
+    session = Session()
+    session.verify = False
+    transport = Transport(session=session)
+    client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+    estabelecimento = client.service.wsE031(wsE031Request={
+        'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+        'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+        'cnpj': cnpj
+    })
+
+    vetor_est = []
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.cnpj)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeEmpresarial)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeFantasia)
+    matriz_filial = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.identificadorMatrizFilial
+    if matriz_filial == 'M':
+        vetor_est.append('Matriz')
+    else:
+        vetor_est.append('Filial')
+
+    if request.POST:
+        ent_cpf = request.POST['cpf']
+        ent_cpf2 = re.sub("[-/\.]", "", ent_cpf)
+        if validate_CPF(ent_cpf) == 1:
+            Entidade.clean(Entidade)
+            model = Entidade.objects.filter(ent_cpf=ent_cpf2)
+            if not model:
+                return redirect('cpf_responsaveltec_createws', cnpj=cnpj, cpf=ent_cpf2)
+            else:
+                entidade = Entidade.objects.get(ent_cpf=ent_cpf2)
+                messages.info(request, 'O CPF informado já está cadastrado!')
+                return redirect('cpf_responsaveltec_updatews', cnpj=cnpj, resp=entidade.id)
+
+        else:
+            messages.error(request, 'O CPF informado é inválido!')
+            return redirect('entresptec_createws', cnpj)
+
+    return render(request, 'entresptecws/entresptec_create.html', {'vetor_est': vetor_est})
+
+
+
+@login_required
+@permission_required('devisa.cpf_responsaveltec_create')
+def cpf_responsaveltec_createws(request, cnpj, cpf):
+    session = Session()
+    session.verify = False
+    transport = Transport(session=session)
+    client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+    estabelecimento = client.service.wsE031(wsE031Request={
+        'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+        'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+        'cnpj': cnpj
+    })
+
+    vetor_est = []
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.cnpj)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeEmpresarial)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeFantasia)
+    matriz_filial = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.identificadorMatrizFilial
+    if matriz_filial == 'M':
+        vetor_est.append('Matriz')
+    else:
+        vetor_est.append('Filial')
+
+    form = EntidadeForm(request.POST or None, request.FILES or None)
+
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'Responsável Técnico cadastrado com sucesso!')
+        return redirect('entresptec_vincula_atvsws', cnpj, cpf)
+
+    return render(request, 'entresptecws/cpf_responsaveltec_create.html', {'cpf': cpf, 'form': form, 'vetor_est': vetor_est})
+
+
+@login_required
+@permission_required('devisa.cpf_responsaveltec_update')
+def cpf_responsaveltec_updatews(request, cnpj, resp):
+    session = Session()
+    session.verify = False
+    transport = Transport(session=session)
+    client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+    estabelecimento = client.service.wsE031(wsE031Request={
+        'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+        'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+        'cnpj': cnpj
+    })
+
+    vetor_est = []
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.cnpj)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeEmpresarial)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeFantasia)
+    matriz_filial = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.identificadorMatrizFilial
+    if matriz_filial == 'M':
+        vetor_est.append('Matriz')
+    else:
+        vetor_est.append('Filial')
+
+    resptec = get_object_or_404(Entidade, pk=resp)
+    form = EntidadeForm(request.POST or None, request.FILES or None, instance=resptec)
+
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'Responsável Técnico alterado com sucesso!')
+        return redirect('entresptec_vincula_atvsws', cnpj, resptec.ent_cpf)
+
+    return render(request, 'entresptecws/cpf_responsaveltec_update.html', {'form': form, 'vetor_est': vetor_est})
+
+
+
+@login_required
+@permission_required('devisa.entresptec_vincula_atvs')
+def entresptec_vincula_atvsws(request, cnpj, cpf):
+    session = Session()
+    session.verify = False
+    transport = Transport(session=session)
+    client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+    estabelecimento = client.service.wsE031(wsE031Request={
+        'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+        'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+        'cnpj': cnpj
+    })
+
+    vetor_est = []
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.cnpj)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeEmpresarial)
+    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeFantasia)
+    matriz_filial = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.identificadorMatrizFilial
+    if matriz_filial == 'M':
+        vetor_est.append('Matriz')
+    else:
+        vetor_est.append('Filial')
+
+    resptec = Entidade.objects.get(ent_cpf=cpf)
+    entsubs = EntidadeSubatividadeWS.objects.filter(entidade=cnpj)
+    atvs = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.atividadesEconomica
+
+    if request.POST:
+        checks = request.POST.getlist('checks[]')
+        for check in checks:
+            entsub = EntidadeSubatividadeWS(entidade=cnpj, subatividade=check, responsavel_tecnico=resptec)
+            entsub.save()
+
+        messages.success(request, 'Atividades do estabelecimento vinculadas ao responsável técnico com sucesso!')
+        return redirect('entresptec_listws', cnpj=cnpj)
+
+    return render(request, 'entresptecws/entresptec_vincula_atvs.html', {'vetor_est': vetor_est,
+                                                                       'resptec': resptec, 'entsubs': entsubs, 'atvs': atvs})
+
+
+
+@login_required
+@permission_required('devisa.entresptec_delete')
+def entresptec_deletews(request, id):
+    entsubresp = get_object_or_404(EntidadeSubatividadeWS, pk=id)
+
+    if request.method == 'POST':
+        entsubresp.responsavel_tecnico = None
+        entsubresp.save()
+        messages.success(request, 'Responsável Técnico desvinculado de estabelecimento com sucesso!')
+        return redirect('entresptec_listws', entsubresp.entidade)
+
+    return render(request, 'entresptecws/entresptec_delete.html', {'model': entsubresp})
+
+# ------------- FIM RESPONSÁVEL TÉCNICO DA ENTIDADE 3 ws - ENTIDADERESPONSAVELTECNICO 3 ws---------------- #
+
+
+
+
+
 # ------------- RESPONSÁVEL LEGAL DO ESTABELECIMENTO - ENTIDADERESPONSAVEL ---------------- #
 @login_required
 @permission_required('devisa.entresp_list')
@@ -2045,3 +2400,244 @@ def ent_classe_producao_delete(request, id):
     return render(request, 'entlp/ent_classe_producao_delete.html', {'model': model})
 
 # ------------------- FIM LINHA DE PRODUÇÃO DA ENTIDADE ---------------------- #
+
+
+# ---------------------- ENTIDADE WS - LINHA DE PRODUÇÃO DA ENTIDADE WS ----------------------- #
+@login_required
+@permission_required('devisa.ent_linha_producao_list')
+def ent_linha_producao_listws(request, cnpj):
+    session = Session()
+    session.verify = False
+    transport = Transport(session=session)
+    client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+    estabelecimento = client.service.wsE031(wsE031Request={
+        'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+        'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+        'cnpj': cnpj
+    })
+
+    model = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim
+    entfps = EntidadeFormaproducaoWS.objects.filter(entidade=cnpj)
+    entcps = EntidadeClasseproducaoWS.objects.filter(entidade=cnpj)
+
+    return render(request, 'entlpws/ent_linha_producao_list.html', {'model': model, 'entfps': entfps, 'entcps': entcps})
+
+
+@login_required
+@permission_required('devisa.ent_forma_producao_create')
+def ent_forma_producao_createws(request, cnpj):
+    session = Session()
+    session.verify = False
+    transport = Transport(session=session)
+    client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+    estabelecimento = client.service.wsE031(wsE031Request={
+        'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+        'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+        'cnpj': cnpj
+    })
+
+    model = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim
+    fps = Formaproducao.objects.all()
+
+    if request.POST:
+        checks = request.POST.getlist('checks[]')
+        for check in checks:
+            fp = get_object_or_404(Formaproducao, pk=check)
+            entfp = EntidadeFormaproducaoWS(entidade=cnpj, forma_producao=fp)
+            entfp.save()
+
+        messages.success(request, 'Formas de Produção vinculadas ao estabelecimento com sucesso!')
+        return redirect('ent_linha_producao_listws', cnpj=cnpj)
+
+    return render(request, 'entlpws/ent_forma_producao_create.html', {'model': model, 'fps': fps})
+
+
+@login_required
+@permission_required('devisa.ent_classe_producao_create')
+def ent_classe_producao_createws(request, cnpj):
+    session = Session()
+    session.verify = False
+    transport = Transport(session=session)
+    client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+    estabelecimento = client.service.wsE031(wsE031Request={
+        'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+        'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+        'cnpj': cnpj
+    })
+
+    model = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim
+    cps = Classeproducao.objects.all()
+
+    if request.POST:
+        checks = request.POST.getlist('checks[]')
+        for check in checks:
+            cp = get_object_or_404(Classeproducao, pk=check)
+            entcp = EntidadeClasseproducaoWS(entidade=cnpj, classe_producao=cp)
+            entcp.save()
+
+        messages.success(request, 'Classes de Produção vinculadas ao estabelecimento com sucesso!')
+        return redirect('ent_linha_producao_listws', cnpj=cnpj)
+
+    return render(request, 'entlpws/ent_classe_producao_create.html', {'model': model, 'cps': cps})
+
+
+@login_required
+@permission_required('devisa.ent_forma_producao_delete')
+def ent_forma_producao_deletews(request, id):
+    model = get_object_or_404(EntidadeFormaproducaoWS, pk=id)
+
+    if request.method == 'POST':
+        model.delete()
+        messages.success(request, 'Forma de Produção desvinculada do estabelecimento com sucesso!')
+        return redirect('ent_linha_producao_listws', model.entidade)
+
+    return render(request, 'entlpws/ent_forma_producao_delete.html', {'model': model})
+
+
+@login_required
+@permission_required('devisa.ent_classe_producao_delete')
+def ent_classe_producao_deletews(request, id):
+    model = get_object_or_404(EntidadeClasseproducaoWS, pk=id)
+
+    if request.method == 'POST':
+        model.delete()
+        messages.success(request, 'Classe de Produção desvinculada do estabelecimento com sucesso!')
+        return redirect('ent_linha_producao_listws', model.entidade)
+
+    return render(request, 'entlpws/ent_classe_producao_delete.html', {'model': model})
+
+# ------------------- FIM LINHA DE PRODUÇÃO DA ENTIDADEWS ---------------------- #
+
+
+# ------------- ATIVIDADE TERCEIRIZADA DA ENTIDADE WS - ENTIDADESUBATIVIDADE WS---------------- #
+@login_required
+@permission_required('devisa.terceirizada_list')
+def terceirizada_listws(request, cnpj):
+    session = Session()
+    session.verify = False
+    transport = Transport(session=session)
+    client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+    estabelecimento = client.service.wsE031(wsE031Request={
+        'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+        'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+        'cnpj': cnpj
+    })
+
+    model = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim
+    terceirizadas = EntidadeSubatividadeWS.objects.filter(entidade=cnpj).exclude(terceirizado='').order_by('terceirizado')
+
+    return render(request, 'enttercws/terceirizada_list.html', {'model': model, 'terceirizadas': terceirizadas})
+
+
+@login_required
+@permission_required('devisa.terceirizada_create')
+def terceirizada_createws(request, cnpj):
+    session = Session()
+    session.verify = False
+    transport = Transport(session=session)
+    client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+    estabelecimento = client.service.wsE031(wsE031Request={
+        'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+        'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+        'cnpj': cnpj
+    })
+
+    model = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim
+
+    if request.POST:
+        ent_cnpj = request.POST['cnpj']
+        ent_cnpj2 = re.sub("[-/\.]", "", ent_cnpj)
+        if validate_CNPJ(ent_cnpj) == 1:
+            if int(ent_cnpj2) == cnpj:
+                messages.error(request, 'O CNPJ informado não pode ser o mesmo do estabelecimento!')
+                return redirect('terceirizada_createws', cnpj)
+            else:
+                terceirizada = client.service.wsE031(wsE031Request={
+                                                        'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+                                                        'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+                                                        'cnpj': ent_cnpj2
+                                                    })
+                if not terceirizada:
+                    messages.error(request, 'O CNPJ informado não foi encontrado na base de dados da RedeSim!')
+                    return redirect('terceirizada_createws', cnpj)
+                else:
+                    return redirect('terceirizada_vincula_atvsws', estab=cnpj, terc=ent_cnpj2)
+        else:
+            messages.error(request, 'O CNPJ informado é inválido!')
+            return redirect('terceirizada_createws', cnpj)
+
+    return render(request, 'enttercws/terceirizada_create.html', {'model': model})
+
+
+@login_required
+@permission_required('devisa.terceirizada_vincula_atvs')
+def terceirizada_vincula_atvsws(request, estab, terc):
+    session = Session()
+    session.verify = False
+    transport = Transport(session=session)
+    client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+    estabelecimento = client.service.wsE031(wsE031Request={
+        'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+        'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+        'cnpj': estab
+    })
+    terceirizado = client.service.wsE031(wsE031Request={
+        'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+        'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+        'cnpj': terc
+    })
+    estabelecimento_dados = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim
+    terceirizado_dados = terceirizado.registrosRedesim.registroRedesim[0].dadosRedesim
+    atvs = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.atividadesEconomica
+
+    entsubs = EntidadeSubatividadeWS.objects.filter(entidade=estab).exclude(terceirizado='')
+
+    if request.POST:
+        checks = request.POST.getlist('checks[]')
+        for check in checks:
+            try:
+                entsubhas = EntidadeSubatividadeWS.objects.get(entidade=estab, subatividade=check)
+            except EntidadeSubatividadeWS.DoesNotExist:
+                entsubhas = None
+            if not entsubhas:
+                entsub = EntidadeSubatividadeWS(entidade=estab, subatividade=check, terceirizado=terc)
+                entsub.save()
+            else:
+                entsubhas.terceirizado = terc
+                entsubhas.save()
+
+        messages.success(request, 'As atividades marcadas foram terceirizadas com sucesso!')
+        return redirect('terceirizada_listws', cnpj=estab)
+
+    return render(request, 'enttercws/terceirizada_vincula_atvs.html', {'estabelecimento': estabelecimento_dados,
+                                                                       'terceirizada': terceirizado_dados, 'entsubs': entsubs, 'atvs': atvs})
+
+
+
+@login_required
+@permission_required('devisa.terceirizada_delete')
+def terceirizada_deletews(request, id):
+    entsub = get_object_or_404(EntidadeSubatividadeWS, pk=id)
+    estabelecimento = entsub.entidade
+    terceirizada = entsub.terceirizado
+
+    session = Session()
+    session.verify = False
+    transport = Transport(session=session)
+    client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+    terceirizado = client.service.wsE031(wsE031Request={
+        'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+        'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+        'cnpj': terceirizada
+    })
+    terceirizado_dados = terceirizado.registrosRedesim.registroRedesim[0].dadosRedesim
+
+    if request.method == 'POST':
+        entsub.terceirizado = ''
+        entsub.save()
+        messages.success(request, 'Atividade desvinculada de empresa terceirizada com sucesso!')
+        return redirect('terceirizada_listws', cnpj=estabelecimento)
+
+    return render(request, 'enttercws/terceirizada_delete.html', {'model': entsub, 'terceirizada': terceirizado_dados})
+
+# ------------- FIM ATIVIDADE TERCEIRIZADA DA ENTIDADE WS - ENTIDADERESUBATIVIDADEWS ---------------- #

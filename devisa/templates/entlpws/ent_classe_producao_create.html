@@ -20,9 +20,9 @@
     <link href="{% static 'css/themes/all-themes.css' %}" rel="stylesheet" />
 {% endblock %}
 
-{% block title %} SIVISAM - Responsável Técnico {% endblock %}
+{% block title %} SIVISAM - Linha de Produção {% endblock %}
 {% block return %}
-       <li class="pull-right"><a href="{% url 'cnpj' %}"><i class="material-icons">chevron_left</i></a></li>
+       <li class="pull-right"><a href="{% url 'ent_linha_producao_listws' model.cnpj %}"><i class="material-icons">chevron_left</i></a></li>
 {% endblock %}
 
 {% block content %}
@@ -32,52 +32,52 @@
                     <div class="card">
                         <div class="header">
                             <h2>
-                                RESPONSÁVEL TÉCNICO
+                                VINCULAR CLASSE DE PRODUÇÃO
                                 <small>
-                                    Lista de Responsáveis Técnicos
-                                    <br/><b>Estabelecimento: {{ model.ent_nome_razao }}</b>
-                                    <br/><b>CNPJ: {{ model.ent_cnpj }}</b>
+                                    Marque a(s) Classe(s) de Produção que você gostaria de vincular ao estabelecimento<br/>
+                                    <br/><b>Estabelecimento: {{ model.nomeFantasia }}</b>
+                                    <br/><b>Razão Social: {{ model.nomeEmpresarial }}</b>
+                                    <br/><b>CNPJ: {{ model.cnpj }}</b>
                                 </small>
                             </h2>
                             <ul class="header-dropdown m-r--5">
                                 <li class="dropdown">
-                                    <a href="{% url 'entresptec_create' model.id %}">
-                                        <button type="button" class="btn bg-teal btn-block btn-lg waves-effect">
-                                            Vincular Responsável Técnico
-                                        </button>
-                                    </a>
                                 </li>
                             </ul>
                         </div>
                         <div class="body">
-                            <div class="table-responsive">
-                                <table class="table table-striped table-hover dataTable js-exportable">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Nome do Técnico</th>
-                                            <th>CPF</th>
-                                            <th>Área/Atividade/Subatividade</th>
-                                            <th>Ações</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for entresptec in entresptecs %}
-                                        <tr>
-                                            <td>{{ entresptec.id }}</td>
-                                            <td>{{ entresptec.responsavel_tecnico.ent_nome_razao }}</td>
-                                            <td>{{ entresptec.responsavel_tecnico.ent_cpf }}</td>
-                                            <td>{{ entresptec.subatividade.atividade.area }} / {{ entresptec.subatividade.atividade }} / {{ entresptec.subatividade }}</td>
-                                            <td>
-                                                <a href="{% url 'entresptec_vincula_atvsws' model.id entresptec.responsavel_tecnico.ent_cpf %}" rel="tooltip" title="Editar" class="btn"><i class="material-icons">mode_edit</i></a>
-                                                <a href="{% url 'entresptec_deletews' entresptec.id %}" rel="tooltip" title="Desvincular" class="btn"><i class="material-icons">close</i></a>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover dataTable js-exportable">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Classe de Produção</th>
+                                                <th>Área de Produção</th>
+                                                <th>Ações</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for cp in cps %}
+                                            <tr>
+                                                <td>{{ cp.id }}</td>
+                                                <td>{{ cp.cp_nome }}</td>
+                                                <td>{{ cp.area_producao }}</td>
+                                                <td>
+                                                    <div class="demo-checkbox">
+                                                        <input type="checkbox" name="checks[]" id="{{ cp.id }}" value="{{ cp.id }}" class="filled-in" />
+                                                        <label for="{{ cp.id }}">Vincular</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-lg m-t-15 waves-effect">SALVAR</button>
+                                <a href="{% url 'ent_linha_producao_listws' model.cnpj %}" class="btn btn-default btn-lg m-t-15 waves-effect">VOLTAR</a>
+                            </form>
                         </div>
                     </div>
                 </div>

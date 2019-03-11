@@ -268,6 +268,7 @@ class Atividade(models.Model):
 
 class Subatividade(models.Model):
     sub_nome = models.CharField(verbose_name='Nome', max_length=100)
+    sub_cnae = models.CharField(verbose_name='Código CNAE', max_length=200, default='', blank=True, null=True)
     atividade = models.ForeignKey(Atividade, on_delete=models.PROTECT)
     entidades = models.ManyToManyField(Entidade)
 
@@ -470,3 +471,77 @@ class EntidadeClasseproducao(models.Model):
 
     def __str__(self):
         return self.classe_producao
+
+
+# --------------- Classes para versão do sistema com acesso aos estabelecimentos via WebServices --------------- #
+
+class EntidadeFormaproducaoWS(models.Model):
+    entidade = models.CharField(max_length=14, verbose_name='estabelecimento')
+    forma_producao = models.ForeignKey(Formaproducao, on_delete=models.PROTECT, related_name='forma_producaows')
+
+    # class Meta:
+    #     permissions = (
+    #         ('ent_linha_producao_list', 'Pode ver formas/classes de produção do estabelecimento'),
+    #         ('ent_forma_producao_create', 'Pode vincular forma de produção'),
+    #         ('ent_forma_producao_delete', 'Pode desvincular forma de produção')
+    #     )
+
+    def __str__(self):
+        return self.forma_producao
+
+
+class EntidadeClasseproducaoWS(models.Model):
+    entidade = models.CharField(max_length=14, verbose_name='estabelecimento')
+    classe_producao = models.ForeignKey(Classeproducao, on_delete=models.PROTECT, related_name='classe_producaows')
+
+    # class Meta:
+    #     permissions = (
+    #         ('ent_classe_producao_create', 'Pode vincular classe de produção'),
+    #         ('ent_classe_producao_delete', 'Pode desvincular classe de produção')
+    #     )
+
+    def __str__(self):
+        return self.classe_producao
+
+
+class EntidadeSubatividadeWS(models.Model):
+    entidade = models.CharField(max_length=14, verbose_name='estabelecimento')
+    subatividade = models.CharField(max_length=20, verbose_name='estabelecimento') # codigo CNAE da atividade
+    responsavel_tecnico = models.ForeignKey(Entidade, on_delete=models.PROTECT, related_name='responsavel_tecnicows', blank=True,
+                                    default='', null=True)
+    terceirizado = models.CharField(max_length=14, verbose_name='terceirizada')
+
+    # class Meta:
+    #     permissions = (
+    #         ('entsub_list', 'Pode listar atividades do estabelecimento'),
+    #         ('entsub_liberal_list', 'Pode listar atividades do profissional liberal'),
+    #         ('entsub_autonomo_list', 'Pode listar atividades do profissional autônomo'),
+    #
+    #         ('entsub_create', 'Pode vincular atividades ao estabelecimento'),
+    #         ('entsub_liberal_create', 'Pode vincular atividades ao profissional liberal'),
+    #         ('entsub_autonomo_create', 'Pode vincular atividades ao profissional autônomo'),
+    #
+    #         ('entsub_delete', 'Pode desvincular atividades do estabelecimento'),
+    #         ('entsub_liberal_delete', 'Pode desvincular atividades do profissional liberal'),
+    #         ('entsub_autonomo_delete', 'Pode desvincular atividades do profissional autônomo'),
+    #
+    #         ('entresptec_list', 'Pode listar responsáveis técnicos'),
+    #         ('entresptec_create', 'Pode validar o CPF do responsável técnico'),
+    #         ('cpf_responsaveltec_create', 'Pode cadastrar responsável técnico'),
+    #         ('cpf_responsaveltec_update', 'Pode editar responsável técnico'),
+    #         ('entresptec_vincula_atvs', 'Pode vincular responsável técnico às atividades do estabelecimento'),
+    #         ('entresptec_delete', 'Pode excluir responsável técnico'),
+    #
+    #         ('terceirizada_list', 'Pode listar atividades terceirizadas do estabelecimento'),
+    #         ('terceirizada_create', 'Pode validar o CNPJ da empresa terceirizada'),
+    #         ('cnpj_terceirizada_create', 'Pode cadastrar empresa terceirizada'),
+    #         ('cnpj_terceirizada_update', 'Pode editar empresa terceirizada'),
+    #         ('terceirizada_vincula_atvs', 'Pode vincular empresa terceirizada às atividades do estabelecimento'),
+    #         ('terceirizada_delete', 'Pode retirar terceirzação de atividade')
+    #
+    #     )
+
+    def __str__(self):
+        return self.self.entidade
+
+

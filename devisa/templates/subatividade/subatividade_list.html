@@ -47,8 +47,10 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Nome</th>
-                                            <th>Atividade Econômica</th>
+                                            <th>Código CNAE</th>
+                                            <th>Nome da Subatividade</th>
+                                            <th>Atividade</th>
+                                            <th>Área</th>
                                             <th>Ações</th>
                                         </tr>
                                     </thead>
@@ -56,8 +58,10 @@
                                         {% for subatividade in subatividades %}
                                         <tr>
                                             <td>{{ subatividade.id }}</td>
+                                            <td>{{ subatividade.sub_cnae }}</td>
                                             <td>{{ subatividade.sub_nome }}</td>
-                                            <td>{{ asubtividade.atividade }}</td>
+                                            <td>{{ subatividade.atividade }}</td>
+                                            <td>{{ subatividade.atividade.area }}</td>
                                             <td style="width: 150px;">
                                                 <a href="{% url 'subatividade_view' subatividade.id %}" class="btn"><i class="material-icons">search</i></a>
                                                 <a href="{% url 'subatividade_update' subatividade.id %}" class="btn"><i class="material-icons">mode_edit</i></a>

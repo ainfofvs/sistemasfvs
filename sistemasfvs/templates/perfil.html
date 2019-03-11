@@ -30,8 +30,9 @@
                                 <img src="{% static 'images/user.png' %}" alt="Imagem de Perfil" />
                             </div>
                             <div class="content-area">
-                                <h3>{{ user.username }}</h3>
-                                <p>{{ user.email }}</p>
+                                <h3 style="color: #8F8F8F;">{{ user.username }}</h3>
+                                <p style="color: #8F8F8F;">{{ user.first_name }} {{ user.last_name }}</p>
+                                <p style="color: #1CB593;">{{ user.email }}</p>
                             </div>
                         </div>
                         <div class="profile-footer">
@@ -39,7 +40,7 @@
                                 <form action="{% url 'altera_foto' %}" method="post">
                                     {% csrf_token %}
                                         <div class="form-group">
-                                            <label for="foto" class="col-sm-2 control-label">Foto</label>
+                                            <label for="foto" class="col-sm-2 control-label" style="color: #8F8F8F;">Foto</label>
                                             <div class="col-sm-10">
                                                 <div class="form-line">
                                                      <input type="file" class="form-control" id="id_foto" name="foto" placeholder="Escolha uma foto...">
@@ -49,14 +50,14 @@
                                         <br/><br/>
                                         <div class="form-group">
                                              <div class="col-sm-offset-2 col-sm-10">
-                                                  <button type="submit" class="btn btn-lg bg-teal btn-block">SALVAR</button>
-                                                  <button type="button" onclick="js: $('#altera_foto').hide(); $('#btn_altera_foto').show(); " class="btn btn-lg bg-teal btn-block">CANCELAR</button>
+                                                  <button type="submit" style="background-color: #1CB593; color: #fff;" class="btn btn-lg btn-block">SALVAR</button>
+                                                  <button type="button" style="background-color: #696969; color: #fff;" onclick="js: $('#altera_foto').hide(); $('#btn_altera_foto').show(); " class="btn btn-lg btn-block">CANCELAR</button>
                                              </div>
                                         </div>
 
                                 </form>
                             </div>
-                            <button id="btn_altera_foto" onclick="js: $('#altera_foto').show(); $('#btn_altera_foto').hide(); " class="btn bg-teal btn-lg waves-effect btn-block">ALTERAR FOTO</button>
+                            <button id="btn_altera_foto" style="background-color: #1CB593; color: #fff;" onclick="js: $('#altera_foto').show(); $('#btn_altera_foto').hide(); " class="btn btn-lg waves-effect btn-block">ALTERAR FOTO</button>
                             <div class="clearfix"></div>
                         </div>
                     </div>

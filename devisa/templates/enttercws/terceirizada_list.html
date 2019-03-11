@@ -20,9 +20,9 @@
     <link href="{% static 'css/themes/all-themes.css' %}" rel="stylesheet" />
 {% endblock %}
 
-{% block title %} SIVISAM - Responsável Técnico {% endblock %}
+{% block title %} SIVISAM - Atividades Terceirizadas {% endblock %}
 {% block return %}
-       <li class="pull-right"><a href="{% url 'cnpj' %}"><i class="material-icons">chevron_left</i></a></li>
+       <li class="pull-right"><a href="{% url 'cnpj3' model.cnpj %}"><i class="material-icons">chevron_left</i></a></li>
 {% endblock %}
 
 {% block content %}
@@ -32,18 +32,19 @@
                     <div class="card">
                         <div class="header">
                             <h2>
-                                RESPONSÁVEL TÉCNICO
+                                ATIVIDADES TERCEIRIZADAS DO ESTABELECIMENTO
                                 <small>
-                                    Lista de Responsáveis Técnicos
-                                    <br/><b>Estabelecimento: {{ model.ent_nome_razao }}</b>
-                                    <br/><b>CNPJ: {{ model.ent_cnpj }}</b>
+                                    Lista de atividades terceirizadas
+                                    <br/><b>Estabelecimento: {{ model.nomeFantasia }}</b>
+                                    <br/><b>Razão Social: {{ model.nomeEmpresarial }}</b>
+                                    <br/><b>CNPJ: {{ model.cnpj }}</b>
                                 </small>
                             </h2>
                             <ul class="header-dropdown m-r--5">
                                 <li class="dropdown">
-                                    <a href="{% url 'entresptec_create' model.id %}">
+                                    <a href="{% url 'terceirizada_createws' model.cnpj %}">
                                         <button type="button" class="btn bg-teal btn-block btn-lg waves-effect">
-                                            Vincular Responsável Técnico
+                                            Terceirizar Atividade
                                         </button>
                                     </a>
                                 </li>
@@ -55,22 +56,20 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Nome do Técnico</th>
-                                            <th>CPF</th>
-                                            <th>Área/Atividade/Subatividade</th>
+                                            <th>Atividade (CNAE)</th>
+                                            <th>Empresa Terceirizada</th>
                                             <th>Ações</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for entresptec in entresptecs %}
+                                        {% for terceirizada in terceirizadas %}
                                         <tr>
-                                            <td>{{ entresptec.id }}</td>
-                                            <td>{{ entresptec.responsavel_tecnico.ent_nome_razao }}</td>
-                                            <td>{{ entresptec.responsavel_tecnico.ent_cpf }}</td>
-                                            <td>{{ entresptec.subatividade.atividade.area }} / {{ entresptec.subatividade.atividade }} / {{ entresptec.subatividade }}</td>
+                                            <td>{{ terceirizada.id }}</td>
+                                            <td>{{ terceirizada.subatividade }}</td>
+                                            <td>{{ terceirizada.terceirizado }}</td>
                                             <td>
-                                                <a href="{% url 'entresptec_vincula_atvsws' model.id entresptec.responsavel_tecnico.ent_cpf %}" rel="tooltip" title="Editar" class="btn"><i class="material-icons">mode_edit</i></a>
-                                                <a href="{% url 'entresptec_deletews' entresptec.id %}" rel="tooltip" title="Desvincular" class="btn"><i class="material-icons">close</i></a>
+                                                <a href="{% url 'terceirizada_vincula_atvsws' model.cnpj terceirizada.terceirizado %}" rel="tooltip" title="Editar" class="btn"><i class="material-icons">mode_edit</i></a>
+                                                <a href="{% url 'terceirizada_deletews' terceirizada.id %}" rel="tooltip" title="Retirar Terceirização" class="btn"><i class="material-icons">close</i></a>
                                             </td>
                                         </tr>
                                         {% endfor %}

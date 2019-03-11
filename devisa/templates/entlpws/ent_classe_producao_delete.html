@@ -19,10 +19,8 @@
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="{% static 'css/themes/all-themes.css' %}" rel="stylesheet" />
 {% endblock %}
-{% block title %} SIVISAM - País {% endblock %}
-{% block return %}
-       <li class="pull-right"><a href="{% url 'pais_list' %}"><i class="material-icons">chevron_left</i></a></li>
-{% endblock %}
+{% block title %} SIVISAM - Linha de Produção {% endblock %}
+
 
 {% block content %}
 
@@ -35,12 +33,12 @@
                             </h2>
                         </div>
                         <div class="body">
-                            <h2>Tem certeza que deseja excluir {{ model.pais_nome }} ?</h2>
-
+                            <h4>Tem certeza que deseja desvincular a Classe de Produção "{{ model.classe_producao.fp_nome }}" do estabelecimento "{{ model.entidade }}" ?</h4>
+                            <br/>
                             <form method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-danger btn-lg">Excluir</button>
-                                <a href="{% url 'pais_list' %}" class="btn btn-default btn-lg">Cancelar</a>
+                                <button type="submit" class="btn btn-danger btn-lg">Desvincular</button>
+                                <a href="{% url 'ent_linha_producao_listws' model.entidade %}" class="btn btn-default btn-lg">Cancelar</a>
                             </form>
                         </div>
                     </div>

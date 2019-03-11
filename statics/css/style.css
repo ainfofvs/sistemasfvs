@@ -1909,6 +1909,15 @@
   .bg-teal .content .number {
     color: #fff !important; }
 
+.bg-gl {
+  background-color: #1CB593 !important;
+  color: #fff; }
+  .bg-gl .content .text,
+  .bg-gl .content .number {
+    color: #fff !important; }
+
+.bg-gl:hover{ color: #fff; }
+
 .bg-green {
   background-color: #4CAF50 !important;
   color: #fff; }
@@ -7616,7 +7625,7 @@ fieldset[disabled] .form-control {
       .sidebar .menu .list li.active > :first-child span {
         font-weight: bold; }
       .sidebar .menu .list .header {
-        background: #eee;
+        background: #F5F5F5;
         font-size: 12px;
         font-weight: 600;
         padding: 8px 16px; }
@@ -7885,14 +7894,14 @@ fieldset[disabled] .form-control {
 
 /* Profile Page ================================ */
 .profile-card .profile-header {
-  background-color: #ad1455;
+  background-color: #fff;
   padding: 42px 0; }
 
 .profile-card .profile-body .image-area {
   text-align: center;
   margin-top: -64px; }
   .profile-card .profile-body .image-area img {
-    border: 2px solid #ad1455;
+    border: 2px solid #1CB593;
     padding: 2px;
     margin: 2px;
     -webkit-border-radius: 50%;

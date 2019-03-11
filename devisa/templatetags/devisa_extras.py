@@ -1,4 +1,5 @@
 from django import template
+from datetime import datetime
 
 register = template.Library()
 
@@ -14,4 +15,10 @@ def ent_tipo_entidade_txt(value):
         '6': 'Responsável Legal',
         '7': 'Responsável Técnico'
     }.get(value, 'None')  # valor default
+
+
+@register.filter(name='ent_data')
+def ent_data(value):
+    data = datetime.strptime(value, '%Y%m%d').date()
+    return data
 

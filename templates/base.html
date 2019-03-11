@@ -96,8 +96,8 @@
                     <img src="{% static 'images/user.png' %}" width="48" height="48" alt="User" />
                 </div>
                 <div class="info-container">
-                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.username }}</div>
-                    <div class="email">{{ user.email }}</div>
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #696969;">{{ user.username }}</div>
+                    <div class="email" style="color: #1CB593;">{{ user.email }}</div>
                     <!--<div class="btn-group user-helper-dropdown">
                         <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                         <ul class="dropdown-menu pull-right">
@@ -112,21 +112,21 @@
             <!-- Menu -->
             <div class="menu">
                 <ul class="list">
-                    <li class="header">MENU</li>
+                    <li class="header" style="color: #696969; font-weight: bold;">MENU</li>
                     <li class="active">
                         <a href="{% url 'home' %}">
-                            <i class="material-icons">home</i>
-                            <span>Página Principal</span>
+                            <i class="material-icons" style="color: #696969;">home</i>
+                            <span style="color: #696969;">Página Principal</span>
                         </a>
                     </li>
                     <li class="active">
                         {% if perms.sistemasfvs.sistema_list %}
                                 <a href="javascript:void(0);" class="menu-toggle">
-                                    <i class="material-icons">devices</i>
-                                    <span>SisPRO</span>
+                                    <i class="material-icons" style="color: #696969;">devices</i>
+                                    <span style="color: #696969;">SisPRO</span>
                                 </a>
                         {% endif %}
-                        <ul class="ml-menu">
+                        <ul class="ml-menu" style="color: #696969;">
                             <li>
                                 <a href="{% url 'sistema_list' %}">
                                     <span>Projetos</span>
@@ -146,13 +146,13 @@
                     </li>
                     <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle" style="">
-                            <i class="material-icons">remove_red_eye</i>
-                            <span>SIVISAM</span>
+                            <i class="material-icons" style="color: #696969;">remove_red_eye</i>
+                            <span style="color: #696969;">SIVISAM</span>
                         </a>
                         <ul class="ml-menu">
                             <li>
                                 <a href="javascript:void(0);" class="menu-toggle">
-                                    <span>Configuração</span>
+                                    <span style="color: #696969;">Configuração</span>
                                 </a>
                                 <ul class="ml-menu">
                                     <li>
@@ -207,7 +207,7 @@
                             </li>
                             <li>
                                 <a href="javascript:void(0);" class="menu-toggle">
-                                    <span>Administração</span>
+                                    <span style="color: #696969;">Administração</span>
                                 </a>
                                 <ul class="ml-menu">
                                     <li>
@@ -225,14 +225,14 @@
                     </li>
                     <li style="border-top: 1px solid #eee;" class="active">
                         <a href="{% url 'perfil' %}">
-                            <i class="material-icons">perm_identity</i>
-                            <span>Perfil</span>
+                            <i class="material-icons" style="color: #696969;">perm_identity</i>
+                            <span style="color: #696969;">Perfil</span>
                         </a>
                     </li>
                     <li class="active">
                         <a href="{% url 'logout' %}">
-                            <i class="material-icons">input</i>
-                            <span>Sair</span>
+                            <i class="material-icons" style="color: #696969;">input</i>
+                            <span style="color: #696969;">Sair</span>
                         </a>
                     </li>
                 </ul>
@@ -240,11 +240,11 @@
             <!-- #Menu -->
             <!-- Footer -->
             <div class="legal">
-                <div class="copyright">
-                     2019 &copy; <a href="http://www.fvs.am.gov.br">Fundação de Vigilância em Saúde</a>
+                <div class="copyright" style="color: #696969;">
+                     2019 &copy; <a href="http://www.fvs.am.gov.br" style="color: #1CB593; font-weight: normal;">Fundação de Vigilância em Saúde</a>
                 </div>
-                <div class="version">
-                    <b>Versão: </b> 1.0
+                <div class="version" style="color: #696969;">
+                    Versão: 1.0
                 </div>
             </div>
             <!-- #Footer -->

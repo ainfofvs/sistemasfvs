@@ -98,9 +98,10 @@ class AtividadeForm(ModelForm):
 class SubatividadeForm(ModelForm):
     class Meta:
         model = Subatividade
-        fields = ['sub_nome', 'atividade']
+        fields = ['sub_nome', 'atividade', 'sub_cnae']
         widgets = {
             'sub_nome': TextInput(attrs={'class': 'form-control'}),
+            'sub_cnae': TextInput(attrs={'class': 'form-control'}),
             'atividade': Select(attrs={'class': 'form-control'})
         }
 

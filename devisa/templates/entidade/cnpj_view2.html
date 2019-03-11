@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load devisa_extras %}
+{% load static %}
+{% block css %}
+    <!-- Bootstrap Core Css -->
+    <link href="{% static 'plugins/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="{% static 'plugins/node-waves/waves.css' %}" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="{% static 'plugins/animate-css/animate.css' %}" rel="stylesheet" />
+
+    <!-- Morris Chart Css-->
+    <link href="{% static 'plugins/morrisjs/morris.css' %}" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="{% static 'css/themes/all-themes.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block title %} SIVISAM - Estabelecimento {% endblock %}
+{% block return %}
+       <li class="pull-right"><a href="{% url 'cnpj2' %}"><i class="material-icons">chevron_left</i></a></li>
+{% endblock %}
+
+{% block content %}
+
+<div class="row clearfix">
+   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+     <div class="card">
+        <div class="header">
+            <h4 class="card-title">Ver Estabelecimento</h4>
+        </div>
+        <div class="body">
+            <div class="form-group form-float">
+                <label class="col-sm-3 col-form-label">CNPJ</label>
+                <div class="col-sm-9"><div class="form-group bmd-form-group is-filled">{{ vetor_est.0 }}</div></div>
+            </div>
+
+            <div class="form-group form-float">
+                <label class="col-sm-3 col-form-label">Razão Social</label>
+                <div class="col-sm-9"><div class="form-group bmd-form-group is-filled">{{ vetor_est.1 }}</div></div>
+            </div>
+
+            <div class="form-group form-float">
+                <label class="col-sm-3 col-form-label">Nome Fantasia</label>
+                <div class="col-sm-9"><div class="form-group bmd-form-group is-filled">{{ vetor_est.2 }}</div></div>
+            </div>
+
+            <div class="form-group form-float">
+                <label class="col-sm-3 col-form-label">Matriz/Filial</label>
+                <div class="col-sm-9"><div class="form-group bmd-form-group is-filled">{{ vetor_est.3 }}</div></div>
+            </div>
+
+            <div class="form-group form-float">
+                <label class="col-sm-3 col-form-label">Data de Abertura do Estabelecimento</label>
+                <div class="col-sm-9"><div class="form-group bmd-form-group is-filled">{{ vetor_est.4 | ent_data }}</div></div>
+            </div>
+
+            <div class="form-group form-float">
+                <label class="col-sm-3 col-form-label">Data de Abertura da Empresa</label>
+                <div class="col-sm-9"><div class="form-group bmd-form-group is-filled">{{ vetor_est.5 | ent_data }}</div></div>
+            </div>
+
+            <div class="form-group form-float">
+                <label class="col-sm-3 col-form-label">Data de Início da Atividade</label>
+                <div class="col-sm-9"><div class="form-group bmd-form-group is-filled">{{ vetor_est.6 | ent_data }}</div></div>
+            </div>
+
+            <div class="form-group form-float">
+                <label class="col-sm-3 col-form-label">CEP</label>
+                <div class="col-sm-9"><div class="form-group bmd-form-group is-filled">{{ vetor_est.7 }}</div></div>
+            </div>
+
+            <div class="form-group form-float">
+                <label class="col-sm-3 col-form-label">Logradouro</label>
+                <div class="col-sm-9"><div class="form-group bmd-form-group is-filled">{{ vetor_est.8 }}</div></div>
+            </div>
+
+            <div class="form-group form-float">
+                <label class="col-sm-3 col-form-label">Tipo de Logradouro</label>
+                <div class="col-sm-9"><div class="form-group bmd-form-group is-filled">{{ vetor_est.9 }}</div></div>
+            </div>
+
+            <div class="form-group form-float">
+                <label class="col-sm-3 col-form-label">Número</label>
+                <div class="col-sm-9"><div class="form-group bmd-form-group is-filled">{{ vetor_est.10 }}</div></div>
+            </div>
+
+            <div class="form-group form-float">
+                <label class="col-sm-3 col-form-label">Complemento</label>
+                <div class="col-sm-9"><div class="form-group bmd-form-group is-filled">{{ vetor_est.11 }}</div></div>
+            </div>
+
+            <div class="form-group form-float">
+                <label class="col-sm-3 col-form-label">Bairro</label>
+                <div class="col-sm-9"><div class="form-group bmd-form-group is-filled">{{ vetor_est.12 }}</div></div>
+            </div>
+
+            <div class="form-group form-float">
+                <label class="col-sm-3 col-form-label">Município</label>
+                <div class="col-sm-9"><div class="form-group bmd-form-group is-filled">{{ vetor_est.13 }}</div></div>
+            </div>
+
+            <div class="form-group form-float">
+                <label class="col-sm-3 col-form-label">UF</label>
+                <div class="col-sm-9"><div class="form-group bmd-form-group is-filled">{{ vetor_est.14 }}</div></div>
+            </div>
+
+            <div class="form-group form-float">
+                <label class="col-sm-3 col-form-label">Endereço Exterior</label>
+                <div class="col-sm-9"><div class="form-group bmd-form-group is-filled">{{ vetor_est.15 }}</div></div>
+            </div>
+
+            <div class="form-group form-float">
+                <label class="col-sm-3 col-form-label">País</label>
+                <div class="col-sm-9"><div class="form-group bmd-form-group is-filled">{{ vetor_est.16 }}</div></div>
+            </div>
+
+            <br/>
+            <div class="form-group form-float">
+                 <a href="{% url 'cnpj2' %}" class="btn btn-lg btn-primary">Voltar</a>
+            </div>
+        </div>
+     </div>
+   </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<!-- Jquery Core Js -->
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.js' %}"></script>
+
+    <!-- Select Plugin Js -->
+    <script src="{% static 'plugins/bootstrap-select/js/bootstrap-select.js' %}"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="{% static 'plugins/jquery-slimscroll/jquery.slimscroll.js' %}"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="{% static 'plugins/node-waves/waves.js' %}"></script>
+
+    <!-- Custom Js -->
+    <script src="{% static 'js/admin.js' %}"></script>
+    <script src="{% static 'js/pages/index.js' %}"></script>
+
+    <!-- Demo Js -->
+    <script src="{% static 'js/demo.js' %}"></script>
+{% endblock %}

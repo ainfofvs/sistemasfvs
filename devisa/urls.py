@@ -28,7 +28,12 @@ from .views import classeproducao_list, classeproducao_create, classeproducao_up
 from .views import linhaproducao_list, linhaproducao_create, linhaproducao_update, linhaproducao_view, linhaproducao_delete
 from .views import formaproducao_list, formaproducao_create, formaproducao_update, formaproducao_view, formaproducao_delete
 from .views import ent_linha_producao_list, ent_forma_producao_create, ent_classe_producao_create
-from .views import ent_forma_producao_delete, ent_classe_producao_delete, cnpj2
+from .views import ent_forma_producao_delete, ent_classe_producao_delete, cnpj2, cnpj_view2, cnpj_validacao3, cnpj3
+from .views import entresptec_listws, entresptec_createws, entresptec_deletews, cpf_responsaveltec_createws, \
+    cpf_responsaveltec_updatews, entresptec_vincula_atvsws
+from .views import ent_linha_producao_listws, ent_forma_producao_createws, ent_classe_producao_createws, \
+    ent_forma_producao_deletews, ent_classe_producao_deletews
+from .views import terceirizada_listws, terceirizada_createws, terceirizada_deletews, terceirizada_vincula_atvsws
 
 
 
@@ -40,6 +45,12 @@ urlpatterns = [
     path('ent_classe_producao_create/<int:id>', ent_classe_producao_create, name="ent_classe_producao_create"),
     path('ent_forma_producao_delete/<int:id>', ent_forma_producao_delete, name="ent_forma_producao_delete"),
     path('ent_classe_producao_delete/<int:id>', ent_classe_producao_delete, name="ent_classe_producao_delete"),
+
+    path('ent_linha_producao_listws/<int:cnpj>', ent_linha_producao_listws, name="ent_linha_producao_listws"),
+    path('ent_forma_producao_createws/<int:cnpj>', ent_forma_producao_createws, name="ent_forma_producao_createws"),
+    path('ent_classe_producao_createws/<int:cnpj>', ent_classe_producao_createws, name="ent_classe_producao_createws"),
+    path('ent_forma_producao_deletews/<int:id>', ent_forma_producao_deletews, name="ent_forma_producao_deletews"),
+    path('ent_classe_producao_deletews/<int:id>', ent_classe_producao_deletews, name="ent_classe_producao_deletews"),
 
     path('formaproducao_list', formaproducao_list, name="formaproducao_list"),
     path('formaproducao_view/<int:id>', formaproducao_view, name="formaproducao_view"),
@@ -72,6 +83,11 @@ urlpatterns = [
     path('cnpj_terceirizada_update/<int:id>/<int:terc_id>', cnpj_terceirizada_update, name="cnpj_terceirizada_update"),
     path('terceirizada_vincula_atvs/<int:id>/<int:terc_id>', terceirizada_vincula_atvs, name="terceirizada_vincula_atvs"),
 
+    path('terceirizada_listws/<int:cnpj>', terceirizada_listws, name="terceirizada_listws"),
+    path('terceirizada_createws/<int:cnpj>', terceirizada_createws, name="terceirizada_createws"),
+    path('terceirizada_deletews/<int:id>', terceirizada_deletews, name="terceirizada_deletews"),
+    path('terceirizada_vincula_atvsws/<int:estab>/<int:terc>', terceirizada_vincula_atvsws, name="terceirizada_vincula_atvsws"),
+
     path('unid_list/<int:id>', unid_list, name="unid_list"),
     path('unid_liberal_list/<int:id>', unid_liberal_list, name="unid_liberal_list"),
     path('unid_autonomo_list/<int:id>', unid_autonomo_list, name="unid_autonomo_list"),
@@ -96,6 +112,15 @@ urlpatterns = [
     path('cpf_responsaveltec_update/<int:id>/<int:resp>', cpf_responsaveltec_update, name="cpf_responsaveltec_update"),
     path('entresptec_vincula_atvs/<int:id>/<str:cpf>', entresptec_vincula_atvs, name="entresptec_vincula_atvs"),
 
+
+    path('entresptec_listws/<int:cnpj>', entresptec_listws, name="entresptec_listws"),
+    path('entresptec_createws/<int:cnpj>', entresptec_createws, name="entresptec_createws"),
+    path('entresptec_deletews/<int:id>', entresptec_deletews, name="entresptec_deletews"),
+    path('cpf_responsaveltec_createws/<int:cnpj>/<str:cpf>', cpf_responsaveltec_createws, name="cpf_responsaveltec_createws"),
+    path('cpf_responsaveltec_updatews/<int:cnpj>/<int:resp>', cpf_responsaveltec_updatews, name="cpf_responsaveltec_updatews"),
+    path('entresptec_vincula_atvsws/<int:cnpj>/<str:cpf>', entresptec_vincula_atvsws, name="entresptec_vincula_atvsws"),
+
+
     path('entsub_list/<int:id>', entsub_list, name="entsub_list"),
     path('entsub_liberal_list/<int:id>', entsub_liberal_list, name="entsub_liberal_list"),
     path('entsub_autonomo_list/<int:id>', entsub_autonomo_list, name="entsub_autonomo_list"),
@@ -112,7 +137,6 @@ urlpatterns = [
     path('cpf_responsavel_create/<int:id>/<str:cpf>', cpf_responsavel_create, name="cpf_responsavel_create"),
     path('cpf_responsavel_update/<int:id>/<int:resp>', cpf_responsavel_update, name="cpf_responsavel_update"),
 
-
     path('cpf_liberal', cpf_liberal, name="cpf_liberal"),
     path('cpf_liberal_validacao', cpf_liberal_validacao, name="cpf_liberal_validacao"),
     path('cpf_liberal_create/<str:cpf>', cpf_liberal_create, name="cpf_liberal_create"),
@@ -128,12 +152,16 @@ urlpatterns = [
     path('cpf_autonomo_delete/<int:id>', cpf_autonomo_delete, name="cpf_autonomo_delete"),
 
     path('cnpj2', cnpj2, name="cnpj2"),
+    path('cnpj_view2/<str:cnpj>', cnpj_view2, name="cnpj_view2"),
     path('cnpj', cnpj, name="cnpj"),
     path('cnpj_view/<int:id>', cnpj_view, name="cnpj_view"),
     path('cnpj_create/<str:cnpj>', cnpj_create, name="cnpj_create"),
     path('cnpj_update/<int:id>', cnpj_update, name="cnpj_update"),
     path('cnpj_delete/<int:id>', cnpj_delete, name="cnpj_delete"),
     path('cnpj_validacao', cnpj_validacao, name="cnpj_validacao"),
+
+    path('cnpj_validacao3', cnpj_validacao3, name="cnpj_validacao3"),
+    path('cnpj3/<int:ent_cnpj2>', cnpj3, name="cnpj3"),
 
     path('atividade_list', atividade_list, name="atividade_list"),
     path('atividade_view/<int:id>', atividade_view, name="atividade_view"),

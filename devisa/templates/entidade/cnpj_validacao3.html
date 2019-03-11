@@ -19,6 +19,9 @@
     <!-- Multi Select Css -->
     <link href="{% static 'plugins/multi-select/css/multi-select.css' %}" rel="stylesheet">
 
+    <!-- Bootstrap Tagsinput Css -->
+    <link href="{% static 'plugins/bootstrap-tagsinput/bootstrap-tagsinput.css' %}" rel="stylesheet">
+
     <!-- Bootstrap Spinner Css -->
     <link href="{% static 'plugins/jquery-spinner/css/bootstrap-spinner.css' %}" rel="stylesheet">
 
@@ -28,16 +31,16 @@
     <!-- Bootstrap Select Css -->
     <link href="{% static 'plugins/bootstrap-select/css/bootstrap-select.css' %}" rel="stylesheet" />
 
-    <!-- noUISlider Css -->
-    <link href="{% static 'plugins/nouislider/nouislider.min.css' %}" rel="stylesheet" />
-
     <!-- Custom Css -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="{% static 'css/themes/all-themes.css' %}" rel="stylesheet" />
 {% endblock %}
-{% block title %} SIVISAM - Subatividade Econômica {% endblock %}
+{% block title %} SIVISAM - Estabelecimento {% endblock %}
+{% block return %}
+       <li class="pull-right"><a href="{% url 'devisa' %}"><i class="material-icons">chevron_left</i></a></li>
+{% endblock %}
 
 {% block content %}
 
@@ -46,48 +49,28 @@
                     <div class="card">
                         <div class="header">
                             <h2>
-                                EDITAR SUBATIVIDADE ECONÔMICA
-                                <small></small>
+                                VALIDAR CNPJ
+                                <small>Informe o CNPJ para ser consultado da base de dados da RedeSim</small>
                             </h2>
                             <ul class="header-dropdown m-r--5">
                                 <li class="dropdown">
-                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                        <i class="material-icons">more_vert</i>
-                                    </a>
-                                    <ul class="dropdown-menu pull-right">
-                                        <li><a href="{% url 'subatividade_list' %}">Voltar</a></li>
-                                    </ul>
                                 </li>
                             </ul>
                         </div>
                         <div class="body">
+                            <div class="demo-masked-input">
                             <form method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        {{ form.sub_nome }}
-                                        <label class="form-label">Nome</label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        {{ form.sub_cnae }}
-                                        <label class="form-label">Código CNAE</label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        {{ form.atividade }}
-                                        <label class="form-label">Atividade Econômica</label>
-                                    </div>
-                                </div>
-
-                                <br>
-                                <button type="submit" class="btn btn-primary btn-lg m-t-15 waves-effect">SALVAR</button>&nbsp;&nbsp;
-                                <a href="{% url 'subatividade_list' %}" class="btn btn-default btn-lg m-t-15 waves-effect">CANCELAR</a>
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                                {{ form.ent_cnpj }}
+                                                <label class="form-label">CNPJ</label>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-lg m-t-15 waves-effect">VALIDAR</button>&nbsp;&nbsp;
+                                        <a href="{% url 'devisa' %}" class="btn btn-default btn-lg m-t-15 waves-effect">CANCELAR</a>
                             </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -126,15 +109,20 @@
     <!-- Bootstrap Tags Input Plugin Js -->
     <script src="{% static 'plugins/bootstrap-tagsinput/bootstrap-tagsinput.js' %}"></script>
 
-    <!-- noUISlider Plugin Js -->
-    <script src="{% static 'plugins/nouislider/nouislider.js' %}"></script>
+    <!-- JQuery Steps Plugin Js -->
+    <script src="{% static 'plugins/jquery-steps/jquery.steps.js' %}"></script>
 
     <!-- Waves Effect Plugin Js -->
     <script src="{% static 'plugins/node-waves/waves.js' %}"></script>
 
     <!-- Custom Js -->
     <script src="{% static 'js/admin.js' %}"></script>
-    <script src="{% static 'js/pages/forms/advanced-form-elements.js' %}"></script>
+    <script>
+        $(function () {
+            var $demoMaskedInput = $('.demo-masked-input');
+            $demoMaskedInput.find('.cnpj').inputmask('99.999.999/9999-99', { placeholder: '__.___.___/____-__' });
+        });
+    </script>
 
     <!-- Demo Js -->
     <script src="{% static 'js/demo.js' %}"></script>

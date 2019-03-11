@@ -22,7 +22,7 @@
 
 {% block title %} SIVISAM - Responsável Técnico {% endblock %}
 {% block return %}
-       <li class="pull-right"><a href="{% url 'cnpj' %}"><i class="material-icons">chevron_left</i></a></li>
+       <li class="pull-right"><a href="{% url 'cnpj3' vetor_est.0 %}"><i class="material-icons">chevron_left</i></a></li>
 {% endblock %}
 
 {% block content %}
@@ -35,13 +35,14 @@
                                 RESPONSÁVEL TÉCNICO
                                 <small>
                                     Lista de Responsáveis Técnicos
-                                    <br/><b>Estabelecimento: {{ model.ent_nome_razao }}</b>
-                                    <br/><b>CNPJ: {{ model.ent_cnpj }}</b>
+                                    <br/><b>Estabelecimento: {{ vetor_est.2 }}</b>
+                                    <br/><b>Razão Social: {{ vetor_est.1 }}</b>
+                                    <br/><b>CNPJ: {{ vetor_est.0 }}</b>
                                 </small>
                             </h2>
                             <ul class="header-dropdown m-r--5">
                                 <li class="dropdown">
-                                    <a href="{% url 'entresptec_create' model.id %}">
+                                    <a href="{% url 'entresptec_createws' vetor_est.0 %}">
                                         <button type="button" class="btn bg-teal btn-block btn-lg waves-effect">
                                             Vincular Responsável Técnico
                                         </button>
@@ -57,7 +58,7 @@
                                             <th>#</th>
                                             <th>Nome do Técnico</th>
                                             <th>CPF</th>
-                                            <th>Área/Atividade/Subatividade</th>
+                                            <th>Atividade (CNAE)</th>
                                             <th>Ações</th>
                                         </tr>
                                     </thead>
@@ -67,9 +68,9 @@
                                             <td>{{ entresptec.id }}</td>
                                             <td>{{ entresptec.responsavel_tecnico.ent_nome_razao }}</td>
                                             <td>{{ entresptec.responsavel_tecnico.ent_cpf }}</td>
-                                            <td>{{ entresptec.subatividade.atividade.area }} / {{ entresptec.subatividade.atividade }} / {{ entresptec.subatividade }}</td>
+                                            <td>{{ entresptec.subatividade }}</td>
                                             <td>
-                                                <a href="{% url 'entresptec_vincula_atvsws' model.id entresptec.responsavel_tecnico.ent_cpf %}" rel="tooltip" title="Editar" class="btn"><i class="material-icons">mode_edit</i></a>
+                                                <a href="{% url 'entresptec_vincula_atvsws' vetor_est.0 entresptec.responsavel_tecnico.ent_cpf %}" rel="tooltip" title="Editar" class="btn"><i class="material-icons">mode_edit</i></a>
                                                 <a href="{% url 'entresptec_deletews' entresptec.id %}" rel="tooltip" title="Desvincular" class="btn"><i class="material-icons">close</i></a>
                                             </td>
                                         </tr>
