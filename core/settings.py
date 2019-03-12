@@ -26,9 +26,9 @@ SECRET_KEY = 'tk_cz!@6fp@p1)xc#r_w93h_=9!fa3gh44ez03!n5oei97_ctn'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-# DEBUG = config('DEBUG', cast=bool)
+# DEBUG = config('DEBUG', default=False, cast=bool)
 
-# ALLOWED_HOSTS = ['localhost,.herokuapp.com']
+# ALLOWED_HOSTS = ['sistemasfvs.herokuapp.com', 'localhost']
 ALLOWED_HOSTS = []
 
 

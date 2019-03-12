@@ -31,6 +31,11 @@ def perfil(request):
     perms = Permission.objects.filter(user=user)
     groups = Group.objects.filter(user=user)
 
+    try:
+        profile = Profile.objects.get(user=user.id)
+    except Profile.DoesNotExist:
+        profile = None
+
     if request.GET:
         usuario = get_object_or_404(User, pk=user.id)
         usuario.email = request.GET.get('email')
@@ -52,7 +57,7 @@ def perfil(request):
     else:
         form = PasswordChangeForm(request.user)
 
-    return render(request, 'perfil.html', {'perms': perms, 'groups': groups, 'form': form, 'perfil': perfil})
+    return render(request, 'perfil.html', {'perms': perms, 'groups': groups, 'form': form, 'perfil': perfil, 'profile': profile})
 
 
 # @login_required
@@ -364,14 +369,22 @@ def documento_delete(request,sis_id,id):
 
 
 @login_required
-@permission_required('sistemasfvs.altera_foto')
+@permission_required('sistemasfvs.perfil')
 def altera_foto(request):
-    perfil = get_object_or_404(Profile, pk=request.user.id)
-    form = ProfileForm(request.POST or None, request.FILES or None, instance=perfil)
+    user = get_object_or_404(User, pk=request.user.id)
 
-    if form.is_valid():
-        form.save()
+    try:
+        profile = Profile.objects.get(user=user.id)
+    except Profile.DoesNotExist:
+        profile = Profile(user=user, foto='')
+        profile.save()
+
+    if request.method == 'POST' and request.FILES['foto']:
+        profile.foto = request.FILES['foto']
+        profile.save()
         messages.success(request, 'Foto do perfil alterada com sucesso!')
         return redirect('perfil')
+    else:
+        messages.error(request, 'Não foi possível alterar a foto do perfil.')
 
     return redirect('perfil')

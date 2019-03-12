@@ -65,5 +65,6 @@ class ProfileForm(ModelForm):
         model = Profile
         fields = ['user', 'foto']
         widgets = {
-            'user': TextInput(attrs={'class': 'form-control'})
+            'user': TextInput(attrs={'class': 'form-control'}),
+            'foto': TextInput(attrs={'class': 'form-control'})
         }

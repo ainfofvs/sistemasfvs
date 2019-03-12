@@ -17,9 +17,8 @@
     <link href="{% static 'css/themes/all-themes.css' %}" rel="stylesheet" />
 {% endblock %}
 {% block title %} Sistemas FVS - Perfil {% endblock %}
+
 {% block content %}
-
-
 
             <div class="row clearfix">
                 <div class="col-xs-12 col-sm-3">
@@ -27,7 +26,12 @@
                         <div class="profile-header">&nbsp;</div>
                         <div class="profile-body">
                             <div class="image-area">
-                                <img src="{% static 'images/user.png' %}" alt="Imagem de Perfil" />
+                                {% if profile %}
+                                    <img src="/media/{{ profile.foto }}" width="70" height="70" alt="Imagem de Perfil" />
+                                {% endif %}
+                                {% if not profile %}
+                                    <img src="{% static 'images/user.png' %}" alt="Imagem de Perfil" />
+                                {% endif %}
                             </div>
                             <div class="content-area">
                                 <h3 style="color: #8F8F8F;">{{ user.username }}</h3>
@@ -37,7 +41,7 @@
                         </div>
                         <div class="profile-footer">
                             <div id="altera_foto" style="display:none;">
-                                <form action="{% url 'altera_foto' %}" method="post">
+                                <form action="{% url 'altera_foto' %}" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
                                         <div class="form-group">
                                             <label for="foto" class="col-sm-2 control-label" style="color: #8F8F8F;">Foto</label>

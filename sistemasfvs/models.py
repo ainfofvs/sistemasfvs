@@ -109,7 +109,12 @@ class Documento(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.PROTECT, related_name='profile')
-    foto = models.FileField(upload_to='fotos_perfil/', null=True, blank=True)
+    foto = models.ImageField(upload_to='fotos_perfil/', null=True, blank=True)
+
+    class Meta:
+        permissions = (
+            ('perfil', 'Pode alterar dados do perfil de usuário'),
+        )
 
     def __str__(self):
         return self.user

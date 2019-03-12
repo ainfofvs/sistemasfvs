@@ -93,7 +93,12 @@
             <!-- User Info -->
             <div class="user-info">
                 <div class="image">
-                    <img src="{% static 'images/user.png' %}" width="48" height="48" alt="User" />
+                         {% if user.profile.foto %}
+                            <img src="/media/{{ user.profile.foto }}" width="50" height="50" alt="Imagem de Perfil" />
+                        {% endif %}
+                        {% if not user.profile.foto %}
+                            <img src="{% static 'images/user.png' %}" alt="Imagem de Perfil" />
+                        {% endif %}
                 </div>
                 <div class="info-container">
                     <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #696969;">{{ user.username }}</div>
