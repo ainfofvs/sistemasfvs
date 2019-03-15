@@ -31,7 +31,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 # ALLOWED_HOSTS = ['sistemasfvs.herokuapp.com', 'localhost']
-ALLOWED_HOSTS = ['sistemasfvs.herokuapp.com']
+ALLOWED_HOSTS = []
 
 
 
@@ -90,16 +90,16 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # }
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'sistemasfvs_db',
-#         'USER': 'postgres',
-#         'PASSWORD': '',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'sistemasfvs_db',
+        'USER': 'postgres',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
 
 # DATABASES = {
 #     'default': {
@@ -112,9 +112,9 @@ WSGI_APPLICATION = 'core.wsgi.application'
 #     }
 # }
 
-default_dburl = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
-
-DATABASES = {'default': config('DATABASE_URL', default=default_dburl, cast=dburl), }
+# default_dburl = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+#
+# DATABASES = {'default': config('DATABASE_URL', default=default_dburl, cast=dburl), }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -168,6 +168,6 @@ STATICFILES_DIRS = [
 
 STATIC_URL = '/static/'
 
-django_heroku.settings(locals())
+
 
 

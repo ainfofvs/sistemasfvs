@@ -429,52 +429,56 @@ def cnpj2(request):
 @permission_required('devisa.cnpj')
 def cnpj3(request, ent_cnpj2):
     vetor_est = []
-    # vetor_respPeranteCnpj = []
-    # vetor_respLegais = []
-    # vetor_atv = []
-    # vetor_unid = []
     ent_cnpj = ent_cnpj2
+    vetor_respPeranteCnpj = ""
+    vetor_respLegais = ""
+    vetor_atv = ""
+    vetor_unid = ""
 
-    session = Session()
-    session.verify = False
-    transport = Transport(session=session)
-    client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
-    estabelecimento = client.service.wsE031(wsE031Request={
-                                                       'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
-                                                       'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
-                                                       'cnpj': ent_cnpj
-                                             })
+    try:
+        session = Session()
+        session.verify = False
+        transport = Transport(session=session)
+        client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+        estabelecimento = client.service.wsE031(wsE031Request={
+                                                           'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+                                                           'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+                                                           'cnpj': ent_cnpj
+                                                 })
 
-    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.cnpj)
-    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeEmpresarial)
-    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeFantasia)
-    matriz_filial = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.identificadorMatrizFilial
-    if matriz_filial == 'M':
-         vetor_est.append('Matriz')
-    else:
-         vetor_est.append('Filial')
+        vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.cnpj)
+        vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeEmpresarial)
+        vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeFantasia)
+        matriz_filial = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.identificadorMatrizFilial
+        if matriz_filial == 'M':
+             vetor_est.append('Matriz')
+        else:
+             vetor_est.append('Filial')
 
-    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.dataAberturaEstabelecimento)
-    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.dataAberturaEmpresa)
-    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.dataInicioAtividade)
-    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.cep)
-    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.logradouro)
-    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.codTipoLogradouro)
-    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.numLogradouro)
-    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.complemento)
-    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.bairro)
-    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.codMunicipio)
-    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.uf)
-    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.enderecoExterior)
-    vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.codPais)
+        vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.dataAberturaEstabelecimento)
+        vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.dataAberturaEmpresa)
+        vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.dataInicioAtividade)
+        vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.cep)
+        vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.logradouro)
+        vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.codTipoLogradouro)
+        vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.numLogradouro)
+        vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.complemento)
+        vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.bairro)
+        vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.codMunicipio)
+        vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.uf)
+        vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.enderecoExterior)
+        vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.endereco.codPais)
 
-    vetor_respPeranteCnpj = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.responsavelPeranteCnpj
+        vetor_respPeranteCnpj = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.responsavelPeranteCnpj
 
-    vetor_respLegais = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.representantesLegais
+        vetor_respLegais = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.representantesLegais
 
-    vetor_atv = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.atividadesEconomica
+        vetor_atv = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.atividadesEconomica
 
-    vetor_unid = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.filiais
+        vetor_unid = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.filiais
+    except:
+        messages.error(request, 'Não foi possível encontrar o CNPJ informado na base de dados da RedeSim!')
+        return redirect('cnpj_validacao3')
 
     return render(request, 'entidade/cnpj3.html', {'cnpj': ent_cnpj,
                                                    'vetor_est': vetor_est,
