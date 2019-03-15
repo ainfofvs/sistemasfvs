@@ -21,7 +21,9 @@
 {% endblock %}
 
 {% block title %} SIVISAM - Bairro {% endblock %}
-
+{% block return %}
+       <li class="pull-right"><a href="{% url 'bairro_list' %}"><i class="material-icons">chevron_left</i></a></li>
+{% endblock %}
 {% block content %}
 
 <div class="row clearfix">

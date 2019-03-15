@@ -269,7 +269,7 @@
             {% if messages %}
                 {% for message in messages %}
                    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-                        <div class="alert alert-success alert-dismissible">
+                        <div class="alert bg-green alert-dismissible">
                    {% endif %}
                    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
                         <div class="alert alert-info alert-dismissible">
@@ -295,10 +295,9 @@
            {% endblock %}
         </div>
     </section>
-
     {% block js %}
-
     {% endblock %}
+
 </body>
 
 </html>

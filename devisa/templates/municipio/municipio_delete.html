@@ -21,7 +21,9 @@
 {% endblock %}
 {% block title %} SIVISAM - Município {% endblock %}
 
-
+{% block return %}
+       <li class="pull-right"><a href="{% url 'municipio_list' %}"><i class="material-icons">chevron_left</i></a></li>
+{% endblock %}
 {% block content %}
 
 <div class="row clearfix">
@@ -33,8 +35,8 @@
                             </h2>
                         </div>
                         <div class="body">
-                            <h2>Tem certeza que deseja excluir {{ model.mun_nome }} ?</h2>
-
+                            <h4>Tem certeza que deseja excluir {{ model.mun_nome }} ?</h4>
+                            <br/>
                             <form method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger btn-lg">Excluir</button>
