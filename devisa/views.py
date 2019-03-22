@@ -440,11 +440,13 @@ def cnpj3(request, ent_cnpj2):
         session.verify = False
         transport = Transport(session=session)
         client = Client('https://portalservicos.jucea.am.gov.br/IntegradorEstadualEJB/WSE031?wsdl', transport=transport)
+
+
         estabelecimento = client.service.wsE031(wsE031Request={
-                                                           'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
-                                                           'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
-                                                           'cnpj': ent_cnpj
-                                                 })
+                                                               'accessKeyId': 'ZHTMJDEJUPAZFRECB0AC',
+                                                               'secretAccessKey': 'qSYNcNeavkOsV9uw6W9nE1XZj0mXwk7jfWmTeIxH',
+                                                               'cnpj': ent_cnpj
+                                                     })
 
         vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.cnpj)
         vetor_est.append(estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.nomeEmpresarial)
@@ -476,6 +478,7 @@ def cnpj3(request, ent_cnpj2):
         vetor_atv = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.atividadesEconomica
 
         vetor_unid = estabelecimento.registrosRedesim.registroRedesim[0].dadosRedesim.filiais
+
     except:
         messages.error(request, 'Não foi possível encontrar o CNPJ informado na base de dados da RedeSim!')
         return redirect('cnpj_validacao3')
